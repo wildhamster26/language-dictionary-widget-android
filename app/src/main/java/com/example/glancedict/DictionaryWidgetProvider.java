@@ -3,6 +3,7 @@ package com.example.glancedict;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,31 @@ import android.widget.RemoteViews;
 
 public class DictionaryWidgetProvider extends AppWidgetProvider {
     public static final String EXTRA_WORD_ID = "com.example.glancedict.EXTRA_WORD_ID";
+    public static final String EXTRA_CATEGORY_ID = "com.example.glancedict.EXTRA_CATEGORY_ID";
+    public static final String ACTION_WIDGET_CLICK = "com.example.glancedict.ACTION_WIDGET_CLICK";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (!ACTION_WIDGET_CLICK.equals(intent.getAction())) {
+            return;
+        }
+        long wordId = intent.getLongExtra(EXTRA_WORD_ID, -1L);
+        long categoryId = intent.getLongExtra(EXTRA_CATEGORY_ID, -1L);
+        if (wordId != -1L) {
+            Intent editIntent = new Intent(context, QuickActionActivity.class);
+            editIntent.putExtra(EXTRA_WORD_ID, wordId);
+            editIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(editIntent);
+        } else if (categoryId != -1L) {
+            DictionaryPrefs.toggleCollapsedCategory(context, categoryId);
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+            int[] ids = manager.getAppWidgetIds(new ComponentName(context, DictionaryWidgetProvider.class));
+            for (int id : ids) {
+                updateAppWidget(context, manager, id);
+            }
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -60,13 +86,14 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
                 R.id.widget_settings,
                 activityPendingIntent(context, SettingsActivity.class, appWidgetId));
 
-        Intent editIntent = new Intent(context, QuickActionActivity.class);
-        PendingIntent editPendingIntent = PendingIntent.getActivity(
+        Intent clickIntent = new Intent(ACTION_WIDGET_CLICK, null, context, DictionaryWidgetProvider.class);
+        clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(
                 context,
                 appWidgetId + 20000,
-                editIntent,
+                clickIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        views.setPendingIntentTemplate(collectionId, editPendingIntent);
+        views.setPendingIntentTemplate(collectionId, clickPendingIntent);
 
         manager.updateAppWidget(appWidgetId, views);
         manager.notifyAppWidgetViewDataChanged(appWidgetId, collectionId);

@@ -19,6 +19,7 @@ public final class DictionaryPrefs {
     private static final String KEY_COLUMN_COUNT = "column_count";
     private static final String KEY_ACTIVE_CATEGORY_IDS = "active_categories";
     private static final String KEY_LONGEST_TEXT_CACHE = "longest_text_cache";
+    private static final String KEY_COLLAPSED_CATEGORY_IDS = "collapsed_categories";
 
     private DictionaryPrefs() {
     }
@@ -66,6 +67,30 @@ public final class DictionaryPrefs {
             stored.add(String.valueOf(id));
         }
         prefs(context).edit().putStringSet(KEY_ACTIVE_CATEGORY_IDS, stored).apply();
+    }
+
+    public static Set<Long> getCollapsedCategoryIds(Context context) {
+        Set<String> stored = prefs(context).getStringSet(KEY_COLLAPSED_CATEGORY_IDS, new HashSet<String>());
+        Set<Long> ids = new HashSet<>();
+        for (String value : stored) {
+            try {
+                ids.add(Long.parseLong(value));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return ids;
+    }
+
+    public static void toggleCollapsedCategory(Context context, long categoryId) {
+        Set<Long> collapsed = getCollapsedCategoryIds(context);
+        if (!collapsed.remove(categoryId)) {
+            collapsed.add(categoryId);
+        }
+        Set<String> stored = new HashSet<>();
+        for (Long id : collapsed) {
+            stored.add(String.valueOf(id));
+        }
+        prefs(context).edit().putStringSet(KEY_COLLAPSED_CATEGORY_IDS, stored).apply();
     }
 
     public static String getLongestTextCache(Context context) {

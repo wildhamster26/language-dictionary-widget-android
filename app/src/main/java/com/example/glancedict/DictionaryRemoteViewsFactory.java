@@ -8,7 +8,9 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private final Context context;
@@ -16,6 +18,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private List<WidgetRow> rows = new ArrayList<>();
     private int fontSizeSp = DictionaryPrefs.DEFAULT_FONT_SP;
     private int columnCount = DictionaryPrefs.DEFAULT_COLUMN_COUNT;
+    private Set<Long> collapsedCategoryIds = new HashSet<>();
 
     private static final int[] CELL_IDS = new int[]{
             R.id.word_cell_1,
@@ -73,6 +76,9 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_category_item);
             views.setTextViewText(R.id.category_header, row.categoryName);
             views.setTextViewTextSize(R.id.category_header, TypedValue.COMPLEX_UNIT_SP, Math.max(10, fontSizeSp - 2));
+            Intent fillInIntent = new Intent();
+            fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_CATEGORY_ID, row.categoryId);
+            views.setOnClickFillInIntent(R.id.category_header, fillInIntent);
             return views;
         }
 
@@ -130,17 +136,20 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private void loadItems() {
         fontSizeSp = DictionaryPrefs.getFontSizeSp(context);
         columnCount = DictionaryPrefs.getColumnCount(context);
+        collapsedCategoryIds = DictionaryPrefs.getCollapsedCategoryIds(context);
         rows = buildRows(db.getWidgetItems(DictionaryPrefs.getActiveCategoryIds(context)));
     }
 
     private List<WidgetRow> buildRows(List<WidgetItem> items) {
         List<WidgetRow> result = new ArrayList<>();
         List<WidgetItem> pendingWords = new ArrayList<>();
+        long currentCategoryId = -1L;
         for (WidgetItem item : items) {
             if (item.categoryHeader) {
                 flushWordRows(result, pendingWords);
-                result.add(WidgetRow.category(item.primary, result.size()));
-            } else {
+                result.add(WidgetRow.category(item.categoryId, item.primary));
+                currentCategoryId = item.categoryId;
+            } else if (!collapsedCategoryIds.contains(currentCategoryId)) {
                 pendingWords.add(item);
             }
         }
@@ -168,20 +177,21 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     private static class WidgetRow {
         final boolean categoryHeader;
+        final long categoryId;
         final String categoryName;
         final List<WidgetItem> words;
         final long stableId;
 
-        private WidgetRow(boolean categoryHeader, String categoryName, List<WidgetItem> words, long stableId) {
+        private WidgetRow(boolean categoryHeader, long categoryId, String categoryName, List<WidgetItem> words, long stableId) {
             this.categoryHeader = categoryHeader;
+            this.categoryId = categoryId;
             this.categoryName = categoryName;
             this.words = words;
             this.stableId = stableId;
         }
 
-        static WidgetRow category(String categoryName, int position) {
-            long stableId = -1L - Math.abs((categoryName + position).hashCode());
-            return new WidgetRow(true, categoryName, new ArrayList<WidgetItem>(), stableId);
+        static WidgetRow category(long categoryId, String categoryName) {
+            return new WidgetRow(true, categoryId, categoryName, new ArrayList<WidgetItem>(), -categoryId);
         }
 
         static WidgetRow words(List<WidgetItem> words) {
@@ -192,7 +202,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
                     break;
                 }
             }
-            return new WidgetRow(false, "", words, stableId);
+            return new WidgetRow(false, -1L, "", words, stableId);
         }
     }
 }

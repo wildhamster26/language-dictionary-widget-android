@@ -9,7 +9,7 @@
 9        android:targetSdkVersion="35" />
 10
 11    <application
-11-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-51:19
+11-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-52:19
 12        android:allowBackup="true"
 12-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:4:9-35
 13        android:debuggable="true"
@@ -79,25 +79,28 @@
 47-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:38:13-69
 48
 49        <receiver
-49-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:41:9-50:20
+49-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:41:9-51:20
 50            android:name="com.example.glancedict.DictionaryWidgetProvider"
 50-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:42:13-53
 51            android:exported="true" >
 51-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:43:13-36
 52            <intent-filter>
-52-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-46:29
+52-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-47:29
 53                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 53-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:17-84
 53-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:25-81
-54            </intent-filter>
-55
-56            <meta-data
-56-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:47:13-49:66
-57                android:name="android.appwidget.provider"
-57-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:17-58
-58                android:resource="@xml/dictionary_widget_info" />
-58-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-63
-59        </receiver>
-60    </application>
-61
-62</manifest>
+54                <action android:name="com.example.glancedict.ACTION_WIDGET_CLICK" />
+54-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:17-85
+54-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:25-82
+55            </intent-filter>
+56
+57            <meta-data
+57-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:13-50:66
+58                android:name="android.appwidget.provider"
+58-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-58
+59                android:resource="@xml/dictionary_widget_info" />
+59-->/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:50:17-63
+60        </receiver>
+61    </application>
+62
+63</manifest>

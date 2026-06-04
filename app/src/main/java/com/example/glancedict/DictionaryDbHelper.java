@@ -237,7 +237,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 continue;
             }
 
-            items.add(WidgetItem.category(category.name));
+            items.add(WidgetItem.category(category.id, category.name));
             for (Word word : words) {
                 items.add(WidgetItem.word(word));
             }

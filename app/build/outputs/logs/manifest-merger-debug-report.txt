@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
 	package
 		INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml
 	android:versionName
@@ -13,8 +13,8 @@ INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main
 	xmlns:android
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-51:19
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-51:19
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-52:19
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-52:19
 	android:extractNativeLibs
 		INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml
 	android:label
@@ -80,23 +80,27 @@ ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/An
 	android:name
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:37:13-52
 receiver#com.example.glancedict.DictionaryWidgetProvider
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:41:9-50:20
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:41:9-51:20
 	android:exported
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:43:13-36
 	android:name
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:42:13-53
-intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-46:29
+intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:com.example.glancedict.ACTION_WIDGET_CLICK
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-47:29
 action#android.appwidget.action.APPWIDGET_UPDATE
 ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:17-84
 	android:name
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:25-81
-meta-data#android.appwidget.provider
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:47:13-49:66
-	android:resource
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-63
+action#com.example.glancedict.ACTION_WIDGET_CLICK
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:17-85
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:17-58
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:25-82
+meta-data#android.appwidget.provider
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:13-50:66
+	android:resource
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:50:17-63
+	android:name
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-58
 uses-sdk
 INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml
