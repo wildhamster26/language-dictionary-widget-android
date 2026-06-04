@@ -48,6 +48,7 @@ id settings_done
 id translation_input
 id widget_add
 id widget_empty
+id widget_footer_link
 id widget_list_1
 id widget_list_2
 id widget_list_3
@@ -88,6 +89,7 @@ mipmap ic_launcher_round
 string add_icon
 string app_name
 string deselect_all
+string footer_link_text
 string select_all
 string settings_icon
 string uncategorized

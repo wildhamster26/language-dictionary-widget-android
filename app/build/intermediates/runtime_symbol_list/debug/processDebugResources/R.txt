@@ -46,6 +46,7 @@ int id settings_done 0x7f030015
 int id translation_input 0x7f030016
 int id widget_add 0x7f030017
 int id widget_empty 0x7f030018
+int id widget_footer_link 0x7f030030
 int id widget_list_1 0x7f030019
 int id widget_list_2 0x7f03001a
 int id widget_list_3 0x7f03001b
@@ -86,6 +87,7 @@ int mipmap ic_launcher_round 0x7f050002
 int string add_icon 0x7f060000
 int string app_name 0x7f060001
 int string deselect_all 0x7f060002
+int string footer_link_text 0x7f060007
 int string select_all 0x7f060003
 int string settings_icon 0x7f060004
 int string uncategorized 0x7f060005

@@ -61,6 +61,12 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
                 R.id.widget_settings,
                 activityPendingIntent(context, SettingsActivity.class, appWidgetId));
 
+        Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://joinrestartabroad.com"));
+        views.setOnClickPendingIntent(
+                R.id.widget_footer_link,
+                PendingIntent.getActivity(context, appWidgetId + 30000, urlIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+
         Intent itemIntent = new Intent(context, QuickActionActivity.class);
         PendingIntent itemPendingIntent = PendingIntent.getActivity(
                 context,

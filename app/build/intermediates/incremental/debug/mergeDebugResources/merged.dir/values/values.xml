@@ -20,8 +20,9 @@
     <string name="add_icon">+</string>
     <string name="app_name">Glance Dictionary</string>
     <string name="deselect_all">Deselect all</string>
+    <string name="footer_link_text">See more at Restart Abroad</string>
     <string name="select_all">Select all</string>
-    <string name="settings_icon">Aa</string>
+    <string name="settings_icon">Settings</string>
     <string name="uncategorized">Uncategorized</string>
     <string name="widget_empty_text">Tap + to add your first word</string>
     <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
