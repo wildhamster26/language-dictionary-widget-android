@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.glancedict"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="23"
+        android:targetSdkVersion="35" />
+
+    <application
+        android:allowBackup="true"
+        android:debuggable="true"
+        android:extractNativeLibs="false"
+        android:label="@string/app_name"
+        android:testOnly="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.glancedict.CategoryManagerActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+        <activity
+            android:name="com.example.glancedict.QuickActionActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+        <activity
+            android:name="com.example.glancedict.AddWordActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+        <activity
+            android:name="com.example.glancedict.SettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/DialogOverlayTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.example.glancedict.DictionaryWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver
+            android:name="com.example.glancedict.DictionaryWidgetProvider"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dictionary_widget_info" />
+        </receiver>
+    </application>
+
+</manifest>

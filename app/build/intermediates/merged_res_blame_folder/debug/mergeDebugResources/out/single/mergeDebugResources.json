@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary_3.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_dictionary_3.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_category_item.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_category_item.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_activity_quick_action.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/activity_quick_action.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_dictionary.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/xml_dictionary_widget_info.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/xml/dictionary_widget_info.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_word_item.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_word_item.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_category_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/category_background.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary_2.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_dictionary_2.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_widget_header_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/widget_header_background.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_dictionary_2.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary_2.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_dictionary_3.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary_3.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_widget_button_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/widget_button_background.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_dictionary_4.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary_4.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_widget_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/widget_background.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_activity_settings.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_dictionary.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_word_item_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/word_item_background.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_dialog_panel_background.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/dialog_panel_background.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_activity_category_manager.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/activity_category_manager.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_activity_add_word.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/activity_add_word.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary_4.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_dictionary_4.xml"
+    }
+]

@@ -1,0 +1,7 @@
+#Thu Jun 04 15:29:27 CST 2026
+base.0=/Users/sagy/Desktop/coding/language-dictionary-widget/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.1=/Users/sagy/Desktop/coding/language-dictionary-widget/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
+path.0=0/classes.dex
+path.1=11/classes.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex

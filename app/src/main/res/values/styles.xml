@@ -1,0 +1,14 @@
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#1F6F8B</item>
+    </style>
+
+    <style name="DialogOverlayTheme" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:backgroundDimAmount">0.18</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#1F6F8B</item>
+    </style>
+</resources>

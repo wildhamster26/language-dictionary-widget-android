@@ -1,0 +1,94 @@
+package com.example.glancedict;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.List;
+
+public class QuickActionActivity extends Activity {
+    private DictionaryDbHelper db;
+    private long wordId = -1L;
+    private Word word;
+    private Spinner categorySpinner;
+    private EditText nativeInput;
+    private EditText translationInput;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_quick_action);
+
+        wordId = getIntent().getLongExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, -1L);
+        db = new DictionaryDbHelper(this);
+        word = db.getWord(wordId);
+        if (word == null) {
+            finish();
+            return;
+        }
+
+        categorySpinner = findViewById(R.id.category_spinner);
+        nativeInput = findViewById(R.id.native_input);
+        translationInput = findViewById(R.id.translation_input);
+
+        bindCategories();
+        nativeInput.setText(word.nativeWord);
+        translationInput.setText(word.translatedWord);
+
+        Button save = findViewById(R.id.save_word);
+        Button delete = findViewById(R.id.delete_word);
+        save.setOnClickListener(v -> saveWord());
+        delete.setOnClickListener(v -> deleteWord());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (db != null) {
+            db.close();
+        }
+    }
+
+    private void bindCategories() {
+        List<Category> categories = db.getCategories();
+        ArrayAdapter<Category> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).id == word.categoryId) {
+                categorySpinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    private void saveWord() {
+        Category category = (Category) categorySpinner.getSelectedItem();
+        String nativeWord = nativeInput.getText().toString().trim();
+        String translatedWord = translationInput.getText().toString().trim();
+        if (category == null || nativeWord.isEmpty() || translatedWord.isEmpty()) {
+            Toast.makeText(this, "Both fields are required.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.updateWord(wordId, category.id, nativeWord, translatedWord);
+        db.refreshLongestTextCache(this);
+        WidgetRefresh.refreshAll(this);
+        finish();
+    }
+
+    private void deleteWord() {
+        db.deleteWord(wordId);
+        db.refreshLongestTextCache(this);
+        WidgetRefresh.refreshAll(this);
+        finish();
+    }
+}

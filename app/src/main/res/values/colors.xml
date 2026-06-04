@@ -1,0 +1,10 @@
+<resources>
+    <color name="widget_background">#F7FAFC</color>
+    <color name="widget_header">#1F2937</color>
+    <color name="widget_header_text">#FFFFFF</color>
+    <color name="word_native">#111827</color>
+    <color name="word_translation">#4B5563</color>
+    <color name="category_bg">#DDE7EF</color>
+    <color name="category_text">#1F2937</color>
+    <color name="danger">#B42318</color>
+</resources>

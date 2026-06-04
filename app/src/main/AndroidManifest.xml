@@ -1,0 +1,49 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".CategoryManagerActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+
+        <activity
+            android:name=".QuickActionActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+
+        <activity
+            android:name=".AddWordActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogOverlayTheme"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".DictionaryWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
+        <receiver
+            android:name=".DictionaryWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dictionary_widget_info" />
+        </receiver>
+    </application>
+</manifest>
