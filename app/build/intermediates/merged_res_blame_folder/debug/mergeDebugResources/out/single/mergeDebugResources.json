@@ -40,6 +40,10 @@
         "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary_2.xml"
     },
     {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_word_row.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_word_row.xml"
+    },
+    {
         "merged": "com.example.glancedict.app-debug-4:/layout_widget_dictionary_3.xml.flat",
         "source": "com.example.glancedict.app-main-6:/layout/widget_dictionary_3.xml"
     },
@@ -58,6 +62,10 @@
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_activity_settings.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_widget_category_item.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/widget_category_item.xml"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary.xml.flat",

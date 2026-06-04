@@ -32,16 +32,16 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
         int columnCount = DictionaryPrefs.getColumnCount(context);
 
         int layoutId = R.layout.widget_dictionary;
-        int gridId = R.id.widget_grid_1;
+        int collectionId = R.id.widget_list_1;
         if (columnCount == 2) {
             layoutId = R.layout.widget_dictionary_2;
-            gridId = R.id.widget_grid_2;
+            collectionId = R.id.widget_list_2;
         } else if (columnCount == 3) {
             layoutId = R.layout.widget_dictionary_3;
-            gridId = R.id.widget_grid_3;
+            collectionId = R.id.widget_list_3;
         } else if (columnCount >= 4) {
             layoutId = R.layout.widget_dictionary_4;
-            gridId = R.id.widget_grid_4;
+            collectionId = R.id.widget_list_4;
         }
 
         RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
@@ -50,8 +50,8 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         serviceIntent.putExtra("column_count", columnCount);
         serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        views.setRemoteAdapter(gridId, serviceIntent);
-        views.setEmptyView(gridId, R.id.widget_empty);
+        views.setRemoteAdapter(collectionId, serviceIntent);
+        views.setEmptyView(collectionId, R.id.widget_empty);
 
         views.setOnClickPendingIntent(
                 R.id.widget_add,
@@ -66,10 +66,10 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
                 appWidgetId + 20000,
                 editIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        views.setPendingIntentTemplate(gridId, editPendingIntent);
+        views.setPendingIntentTemplate(collectionId, editPendingIntent);
 
         manager.updateAppWidget(appWidgetId, views);
-        manager.notifyAppWidgetViewDataChanged(appWidgetId, gridId);
+        manager.notifyAppWidgetViewDataChanged(appWidgetId, collectionId);
     }
 
     private static PendingIntent activityPendingIntent(
