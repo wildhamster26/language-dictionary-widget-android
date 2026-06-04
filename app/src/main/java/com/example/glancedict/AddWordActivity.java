@@ -93,7 +93,15 @@ public class AddWordActivity extends Activity {
             RuntimeException failure = null;
             DictionaryDbHelper workerDb = new DictionaryDbHelper(getApplicationContext());
             try {
-                if (!bulk.isEmpty()) {
+                if (!bulk.isEmpty() && BulkWordParser.isJson(bulk)) {
+                    List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(bulk);
+                    for (BulkWordParser.CategoryGroup group : groups) {
+                        long gCategoryId = workerDb.createCategory(group.name);
+                        if (gCategoryId > 0) {
+                            saved += workerDb.addWords(gCategoryId, group.pairs);
+                        }
+                    }
+                } else if (!bulk.isEmpty()) {
                     saved = workerDb.addWords(categoryId, BulkWordParser.parse(bulk));
                 } else {
                     if (workerDb.addWord(categoryId, nativeWord, translatedWord) > 0) {

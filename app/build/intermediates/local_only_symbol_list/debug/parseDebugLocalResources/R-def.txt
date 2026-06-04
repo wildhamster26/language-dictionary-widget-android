@@ -3,6 +3,7 @@ local
 color category_bg
 color category_text
 color danger
+color ic_launcher_background
 color outline_soft
 color primary
 color primary_fixed_dim
@@ -81,6 +82,9 @@ layout widget_dictionary_3
 layout widget_dictionary_4
 layout widget_word_item
 layout widget_word_row
+mipmap ic_launcher
+mipmap ic_launcher_foreground
+mipmap ic_launcher_round
 string add_icon
 string app_name
 string deselect_all

@@ -1,6 +1,10 @@
 package com.example.glancedict;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public final class BulkWordParser {
@@ -11,6 +15,16 @@ public final class BulkWordParser {
         public Pair(String nativeWord, String translatedWord) {
             this.nativeWord = nativeWord;
             this.translatedWord = translatedWord;
+        }
+    }
+
+    public static class CategoryGroup {
+        public final String name;
+        public final List<Pair> pairs;
+
+        public CategoryGroup(String name, List<Pair> pairs) {
+            this.name = name;
+            this.pairs = pairs;
         }
     }
 
@@ -54,6 +68,51 @@ public final class BulkWordParser {
             return null;
         }
         return new Pair(nativeWord, translatedWord);
+    }
+
+    public static boolean isJson(String input) {
+        if (input == null) return false;
+        String trimmed = input.trim();
+        return trimmed.startsWith("{");
+    }
+
+    public static List<CategoryGroup> parseJson(String input) {
+        List<CategoryGroup> groups = new ArrayList<>();
+        if (input == null || input.trim().isEmpty()) {
+            return groups;
+        }
+        try {
+            JSONObject root = new JSONObject(input.trim());
+            Iterator<String> categoryKeys = root.keys();
+            while (categoryKeys.hasNext()) {
+                String categoryName = categoryKeys.next();
+                JSONObject wordsObj;
+                try {
+                    wordsObj = root.getJSONObject(categoryName);
+                } catch (JSONException e) {
+                    continue;
+                }
+                List<Pair> pairs = new ArrayList<>();
+                Iterator<String> wordKeys = wordsObj.keys();
+                while (wordKeys.hasNext()) {
+                    String word = wordKeys.next();
+                    String translation;
+                    try {
+                        translation = wordsObj.getString(word);
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    if (!word.trim().isEmpty() && !translation.trim().isEmpty()) {
+                        pairs.add(new Pair(word.trim(), translation.trim()));
+                    }
+                }
+                if (!pairs.isEmpty()) {
+                    groups.add(new CategoryGroup(categoryName.trim(), pairs));
+                }
+            }
+        } catch (JSONException ignored) {
+        }
+        return groups;
     }
 
     private static int findFirstDelimiter(String line) {
