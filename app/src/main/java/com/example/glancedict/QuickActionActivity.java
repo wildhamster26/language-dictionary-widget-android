@@ -21,6 +21,15 @@ public class QuickActionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        long categoryId = getIntent().getLongExtra(DictionaryWidgetProvider.EXTRA_CATEGORY_ID, -1L);
+        if (categoryId != -1L) {
+            DictionaryPrefs.toggleCollapsedCategory(this, categoryId);
+            WidgetRefresh.refreshAll(this);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_quick_action);
 
         wordId = getIntent().getLongExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, -1L);

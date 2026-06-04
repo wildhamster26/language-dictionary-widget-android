@@ -88,23 +88,19 @@ public class CategoryManagerActivity extends Activity {
 
     private void confirmDelete(Category category) {
         int wordCount = db.getWordCountForCategory(category.id);
-        String message = "This category contains " + wordCount + " words. What would you like to do?";
+        String message = wordCount == 0
+                ? "This category is empty."
+                : "All " + wordCount + " words in this category will be permanently deleted.";
         new AlertDialog.Builder(this)
-                .setTitle("Delete " + category.name)
+                .setTitle("Delete \"" + category.name + "\"?")
                 .setMessage(message)
-                .setPositiveButton("Delete category and all words inside it.", (dialog, which) -> {
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete", (dialog, which) -> {
                     db.deleteCategoryAndWords(category.id);
                     db.refreshLongestTextCache(this);
                     renderCategories();
                     WidgetRefresh.refreshAll(this);
                 })
-                .setNegativeButton("Move words to Uncategorized.", (dialog, which) -> {
-                    db.deleteCategoryMoveWordsToDefault(category.id);
-                    db.refreshLongestTextCache(this);
-                    renderCategories();
-                    WidgetRefresh.refreshAll(this);
-                })
-                .setNeutralButton("Cancel", null)
                 .show();
     }
 
