@@ -13,9 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Widget settings"
-            android:textColor="#111827"
+            android:textColor="@color/word_native"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <Button
             android:id="@+id/settings_add_words"
@@ -29,8 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="Font size"
-            android:textColor="#374151"
-            android:textStyle="bold" />
+            android:textColor="@color/word_translation"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,9 +52,10 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#111827"
+                android:textColor="@color/word_native"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <Button
                 android:id="@+id/font_increment"
@@ -66,8 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="Columns"
-            android:textColor="#374151"
-            android:textStyle="bold" />
+            android:textColor="@color/word_translation"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,9 +91,10 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#111827"
+                android:textColor="@color/word_native"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <Button
                 android:id="@+id/columns_increment"
@@ -103,8 +108,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="Active categories"
-            android:textColor="#374151"
-            android:textStyle="bold" />
+            android:textColor="@color/word_translation"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <LinearLayout
             android:layout_width="match_parent"

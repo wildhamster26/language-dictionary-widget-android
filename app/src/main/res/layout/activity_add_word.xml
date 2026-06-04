@@ -13,9 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add words"
-            android:textColor="#111827"
+            android:textColor="@color/word_native"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <Spinner
             android:id="@+id/category_spinner"
@@ -42,8 +43,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="Bulk upload"
-            android:textColor="#374151"
-            android:textStyle="bold" />
+            android:textColor="@color/word_translation"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <EditText
             android:id="@+id/bulk_input"

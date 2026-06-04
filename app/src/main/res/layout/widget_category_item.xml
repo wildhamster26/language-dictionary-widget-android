@@ -15,4 +15,5 @@
     android:singleLine="false"
     android:textColor="@color/category_text"
     android:textSize="12sp"
-    android:textStyle="bold" />
+    android:textStyle="bold"
+    android:fontFamily="sans-serif-medium" />

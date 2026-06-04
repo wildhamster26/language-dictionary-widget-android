@@ -3,6 +3,14 @@ local
 color category_bg
 color category_text
 color danger
+color outline_soft
+color primary
+color primary_fixed_dim
+color secondary
+color surface
+color surface_high
+color surface_low
+color surface_lowest
 color widget_background
 color widget_header
 color widget_header_text

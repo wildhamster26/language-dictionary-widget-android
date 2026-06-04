@@ -9,9 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit word"
-        android:textColor="#111827"
+        android:textColor="@color/word_native"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium" />
 
     <Spinner
         android:id="@+id/category_spinner"
