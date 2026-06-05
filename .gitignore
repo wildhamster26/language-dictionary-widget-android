@@ -8,9 +8,15 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /.idea/deploymentTargetSelector.xml
+/.idea/planningMode.xml
+/.idea/deviceManager.xml
+/.idea/studiobot.xml
 /build
 /app/build
 *.class
 /captures
 .externalNativeBuild
 .cxx
+.DS_Store
+*.keystore
+*.jks
