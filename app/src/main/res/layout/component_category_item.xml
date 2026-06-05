@@ -46,12 +46,13 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <ImageView
+    <TextView
         android:id="@+id/delete_category"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:padding="4dp"
-        android:src="@drawable/ic_delete"
+        style="@style/SmallSecondaryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textColor="@color/danger"
         android:visibility="gone" />
 
 </LinearLayout>

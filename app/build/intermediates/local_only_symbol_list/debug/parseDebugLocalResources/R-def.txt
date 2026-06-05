@@ -38,7 +38,9 @@ drawable bg_danger_button
 drawable bg_dialog_rounded
 drawable bg_folder_icon
 drawable bg_input_field
+drawable bg_primary_button
 drawable bg_rounded_card
+drawable bg_secondary_button
 drawable category_background
 drawable checkbox_selector
 drawable dialog_panel_background
@@ -55,6 +57,7 @@ drawable widget_button_background
 drawable widget_header_background
 drawable word_item_background
 id add_word_cancel
+id add_word_top_cancel
 id bulk_input
 id categories_done
 id categories_header
@@ -86,6 +89,7 @@ id section_icon
 id section_title
 id settings_cancel
 id settings_done
+id settings_top_cancel
 id translation_input
 id widget_add
 id widget_empty
@@ -141,6 +145,10 @@ string settings_icon
 string uncategorized
 string widget_empty_text
 style AppTheme
+style DangerButton
 style DialogOverlayTheme
+style PrimaryButton
 style RoundedDialogTheme
+style SecondaryButton
+style SmallSecondaryButton
 xml dictionary_widget_info

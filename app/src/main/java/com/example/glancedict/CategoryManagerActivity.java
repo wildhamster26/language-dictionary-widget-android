@@ -74,17 +74,17 @@ public class CategoryManagerActivity extends Activity {
 
             TextView nameView = itemView.findViewById(R.id.category_name);
             TextView countView = itemView.findViewById(R.id.word_count);
-            ImageView deleteIcon = itemView.findViewById(R.id.delete_category);
+            TextView deleteButton = itemView.findViewById(R.id.delete_category);
 
             nameView.setText(category.name);
             int wordCount = db.getWordCountForCategory(category.id);
             countView.setText(wordCount + (wordCount == 1 ? " Word" : " Words"));
 
             if (category.id != defaultId) {
-                deleteIcon.setVisibility(View.VISIBLE);
-                deleteIcon.setOnClickListener(v -> confirmDelete(category));
+                deleteButton.setVisibility(View.VISIBLE);
+                deleteButton.setOnClickListener(v -> confirmDelete(category));
             } else {
-                deleteIcon.setVisibility(View.GONE);
+                deleteButton.setVisibility(View.GONE);
             }
 
             categoryList.addView(itemView);

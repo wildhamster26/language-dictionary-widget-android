@@ -68,8 +68,10 @@ public class SettingsActivity extends Activity {
 
         View save = findViewById(R.id.settings_done);
         View cancel = findViewById(R.id.settings_cancel);
+        View topCancel = findViewById(R.id.settings_top_cancel);
 
         cancel.setOnClickListener(v -> finish());
+        topCancel.setOnClickListener(v -> finish());
         save.setOnClickListener(v -> {
             saveActiveCategories();
             db.refreshLongestTextCache(this);

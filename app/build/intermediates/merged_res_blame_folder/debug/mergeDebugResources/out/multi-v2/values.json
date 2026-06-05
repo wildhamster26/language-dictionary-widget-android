@@ -36,20 +36,20 @@
                 {
                     "source": "/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/res/values/styles.xml",
                     "from": {
-                        "startLines": "-1,-1,15",
-                        "startColumns": "-1,-1,4",
-                        "startOffsets": "-1,-1,699",
-                        "endLines": "-1,-1,19",
-                        "endColumns": "-1,-1,12",
-                        "endOffsets": "-1,-1,1033"
+                        "startLines": "-1,-1,-1,22,-1,33,44",
+                        "startColumns": "-1,-1,-1,4,-1,4,4",
+                        "startOffsets": "-1,-1,-1,1120,-1,1619,2133",
+                        "endLines": "-1,-1,-1,31,-1,42,49",
+                        "endColumns": "-1,-1,-1,12,-1,12,12",
+                        "endOffsets": "-1,-1,-1,1613,-1,2127,2418"
                     },
                     "to": {
-                        "startLines": "40,44,51",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "1937,2158,2579",
-                        "endLines": "43,50,55",
-                        "endColumns": "12,12,12",
-                        "endOffsets": "2153,2574,2913"
+                        "startLines": "40,44,47,55,65,70,80",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "1937,2158,2300,2802,3300,3639,4152",
+                        "endLines": "43,46,54,64,69,79,85",
+                        "endColumns": "12,12,12,12,12,12,12",
+                        "endOffsets": "2153,2295,2797,3295,3634,4147,4437"
                     }
                 },
                 {
@@ -105,20 +105,20 @@
                 {
                     "source": "/Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/res/values/styles.xml",
                     "from": {
-                        "startLines": "-1,7,-1",
-                        "startColumns": "-1,4,-1",
-                        "startOffsets": "-1,277,-1",
-                        "endLines": "-1,14,-1",
-                        "endColumns": "-1,12,-1",
-                        "endOffsets": "-1,774,-1"
+                        "startLines": "-1,-1,-1,22,-1,34,46",
+                        "startColumns": "-1,-1,-1,4,-1,4,4",
+                        "startOffsets": "-1,-1,-1,1120,-1,1669,2233",
+                        "endLines": "-1,-1,-1,32,-1,44,51",
+                        "endColumns": "-1,-1,-1,12,-1,12,12",
+                        "endOffsets": "-1,-1,-1,1663,-1,2227,2518"
                     },
                     "to": {
-                        "startLines": "40,44,52",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "1937,2158,2660",
-                        "endLines": "43,51,56",
-                        "endColumns": "12,12,12",
-                        "endOffsets": "2153,2655,2994"
+                        "startLines": "40,44,47,55,66,71,82",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "1937,2158,2300,2802,3350,3689,4252",
+                        "endLines": "43,46,54,65,70,81,87",
+                        "endColumns": "12,12,12,12,12,12,12",
+                        "endOffsets": "2153,2295,2797,3345,3684,4247,4537"
                     }
                 },
                 {

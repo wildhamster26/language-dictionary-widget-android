@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -40,12 +41,14 @@ public class AddWordActivity extends Activity {
         bulkInput = findViewById(R.id.bulk_input);
 
         save = findViewById(R.id.save_word);
-        View manageCategories = findViewById(R.id.manage_categories);
+        TextView manageCategories = findViewById(R.id.manage_categories);
         View cancel = findViewById(R.id.add_word_cancel);
+        View topCancel = findViewById(R.id.add_word_top_cancel);
         
         save.setOnClickListener(v -> saveWords());
         manageCategories.setOnClickListener(v -> startActivity(new Intent(this, CategoryManagerActivity.class)));
         cancel.setOnClickListener(v -> finish());
+        topCancel.setOnClickListener(v -> finish());
     }
 
     @Override
