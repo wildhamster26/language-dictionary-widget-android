@@ -61,7 +61,7 @@
 
                 <TextView
                     android:id="@+id/manage_categories"
-                    style="@style/SmallSecondaryButton"
+                    style="@style/SecondaryButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Manage Categories" />
