@@ -51,6 +51,7 @@ drawable ic_close
 drawable ic_delete
 drawable ic_display
 drawable ic_folder
+drawable ic_reorder
 drawable ic_vocabulary
 drawable widget_background
 drawable widget_button_background
@@ -59,15 +60,17 @@ drawable word_item_background
 id add_word_cancel
 id add_word_top_cancel
 id bulk_input
-id categories_done
+id categories_cancel
+id categories_cancel_top
 id categories_header
+id categories_save
 id category_checkbox
 id category_checks
 id category_header
 id category_icon
-id category_list
 id category_name
 id category_name_input
+id category_recycler
 id category_spinner
 id columns_row
 id control_decrement
@@ -84,6 +87,7 @@ id folder_icon_container
 id font_size_row
 id manage_categories
 id native_input
+id reorder_handle
 id save_word
 id section_icon
 id section_title
@@ -126,6 +130,7 @@ layout component_category_item
 layout component_category_select_item
 layout component_section_header
 layout component_settings_control
+layout header_category_manager
 layout widget_category_item
 layout widget_dictionary
 layout widget_dictionary_2

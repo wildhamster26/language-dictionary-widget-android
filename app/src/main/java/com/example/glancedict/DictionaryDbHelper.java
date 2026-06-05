@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "dictionary.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DEFAULT_CATEGORY = "Uncategorized";
 
     private static final String TABLE_CATEGORIES = "categories";
@@ -33,7 +33,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE categories (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT NOT NULL UNIQUE)");
+                "name TEXT NOT NULL UNIQUE, " +
+                "display_order INTEGER DEFAULT 0)");
         db.execSQL("CREATE TABLE words (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "category_id INTEGER NOT NULL, " +
@@ -50,8 +51,9 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Keep user vocabulary intact. Future schema versions should add explicit
-        // migrations here instead of using a destructive fallback.
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE categories ADD COLUMN display_order INTEGER DEFAULT 0");
+        }
     }
 
     public long ensureDefaultCategory() {
@@ -88,7 +90,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 null,
-                "CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, name COLLATE NOCASE ASC");
+                "CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC");
         try {
             int idIndex = cursor.getColumnIndexOrThrow("id");
             int nameIndex = cursor.getColumnIndexOrThrow("name");
@@ -218,6 +220,21 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             values.put("category_id", defaultId);
             db.update(TABLE_WORDS, values, "category_id = ?", new String[]{String.valueOf(categoryId)});
             db.delete(TABLE_CATEGORIES, "id = ?", new String[]{String.valueOf(categoryId)});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void updateCategoryOrder(List<Long> categoryIds) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < categoryIds.size(); i++) {
+                ContentValues values = new ContentValues();
+                values.put("display_order", i);
+                db.update(TABLE_CATEGORIES, values, "id = ?", new String[]{String.valueOf(categoryIds.get(i))});
+            }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

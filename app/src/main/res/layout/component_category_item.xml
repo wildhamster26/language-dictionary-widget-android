@@ -8,6 +8,14 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/reorder_handle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_reorder"
+        android:contentDescription="Reorder" />
+
     <View
         android:id="@+id/folder_icon_container"
         android:layout_width="48dp"
