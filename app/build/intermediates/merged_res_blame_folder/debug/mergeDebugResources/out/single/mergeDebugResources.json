@@ -4,12 +4,12 @@
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/ic_display.xml"
     },
     {
-        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
-        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/mipmap-hdpi/ic_launcher_foreground.webp"
-    },
-    {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_ic_categories.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/ic_categories.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/mipmap-hdpi/ic_launcher_foreground.webp"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
@@ -188,8 +188,20 @@
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/bg_rounded_card.xml"
     },
     {
+        "merged": "com.example.glancedict.app-debug-4:/drawable_dialog_panel_background.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/drawable/dialog_panel_background.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-4:/layout_activity_category_manager.xml.flat",
+        "source": "com.example.glancedict.app-main-6:/layout/activity_category_manager.xml"
+    },
+    {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/layout_widget_dictionary_3.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/layout/widget_dictionary_3.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/drawable_bg_dialog_rounded.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-6:/drawable/bg_dialog_rounded.xml"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-4:/mipmap-xxhdpi_ic_launcher.webp.flat",

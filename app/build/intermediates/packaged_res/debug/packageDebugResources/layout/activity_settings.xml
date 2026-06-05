@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_lowest"
+    android:background="@drawable/dialog_panel_background"
     android:orientation="vertical">
 
     <!-- Top Bar -->
@@ -28,7 +28,7 @@
             android:gravity="start"
             android:paddingStart="16dp"
             android:text="Widget Settings"
-            android:textColor="@color/word_native"
+            android:textColor="@color/button_create_bg"
             android:textSize="20sp"
             android:textStyle="bold" />
 

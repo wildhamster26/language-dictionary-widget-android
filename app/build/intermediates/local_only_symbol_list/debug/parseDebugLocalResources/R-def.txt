@@ -34,6 +34,7 @@ drawable bg_checkbox_checked
 drawable bg_checkbox_unchecked
 drawable bg_control_box
 drawable bg_create_button
+drawable bg_dialog_rounded
 drawable bg_folder_icon
 drawable bg_input_field
 drawable bg_rounded_card
@@ -138,4 +139,5 @@ string uncategorized
 string widget_empty_text
 style AppTheme
 style DialogOverlayTheme
+style RoundedDialogTheme
 xml dictionary_widget_info

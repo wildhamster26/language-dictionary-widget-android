@@ -96,7 +96,7 @@ public class CategoryManagerActivity extends Activity {
         String message = wordCount == 0
                 ? "This category is empty."
                 : "All " + wordCount + " words in this category will be permanently deleted.";
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
                 .setTitle("Delete \"" + category.name + "\"?")
                 .setMessage(message)
                 .setNegativeButton("Cancel", null)

@@ -48,5 +48,11 @@
         <item name="android:backgroundDimAmount">0.18</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:colorAccent">@color/secondary</item>
+        <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+    </style>
+    <style name="RoundedDialogTheme" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+        <item name="android:textColorPrimary">@color/button_create_bg</item>
+        <item name="android:colorAccent">@color/button_create_bg</item>
     </style>
 </resources>

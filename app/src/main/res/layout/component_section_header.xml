@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:text="Section Title"
-        android:textColor="@color/word_native"
+        android:textColor="@color/button_create_bg"
         android:textSize="18sp"
         android:textStyle="bold" />
 

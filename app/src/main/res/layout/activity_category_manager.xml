@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_lowest"
+    android:background="@drawable/dialog_panel_background"
     android:orientation="vertical">
 
     <!-- Top Bar -->
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Manage Categories"
-            android:textColor="@color/title_green"
+            android:textColor="@color/button_create_bg"
             android:textSize="22sp"
             android:textStyle="bold" />
 
