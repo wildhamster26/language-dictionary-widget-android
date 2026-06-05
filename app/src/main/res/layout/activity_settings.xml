@@ -20,16 +20,12 @@
             android:src="@drawable/ic_close" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/settings_cancel"
-            android:layout_toStartOf="@id/settings_done"
-            android:gravity="start"
-            android:paddingStart="16dp"
+            android:layout_centerInParent="true"
             android:text="Widget Settings"
             android:textColor="@color/button_create_bg"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView

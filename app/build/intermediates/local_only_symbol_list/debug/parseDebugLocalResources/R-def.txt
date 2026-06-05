@@ -34,6 +34,7 @@ drawable bg_checkbox_checked
 drawable bg_checkbox_unchecked
 drawable bg_control_box
 drawable bg_create_button
+drawable bg_danger_button
 drawable bg_dialog_rounded
 drawable bg_folder_icon
 drawable bg_input_field
@@ -53,6 +54,7 @@ drawable widget_background
 drawable widget_button_background
 drawable widget_header_background
 drawable word_item_background
+id add_word_cancel
 id bulk_input
 id categories_done
 id categories_header
@@ -74,6 +76,7 @@ id create_category
 id delete_category
 id delete_word
 id display_header
+id edit_word_cancel
 id folder_icon_container
 id font_size_row
 id manage_categories

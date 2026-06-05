@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,7 +23,7 @@ public class AddWordActivity extends Activity {
     private EditText nativeInput;
     private EditText translationInput;
     private EditText bulkInput;
-    private Button save;
+    private View save;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean destroyed;
@@ -38,9 +40,12 @@ public class AddWordActivity extends Activity {
         bulkInput = findViewById(R.id.bulk_input);
 
         save = findViewById(R.id.save_word);
-        Button manageCategories = findViewById(R.id.manage_categories);
+        View manageCategories = findViewById(R.id.manage_categories);
+        View cancel = findViewById(R.id.add_word_cancel);
+        
         save.setOnClickListener(v -> saveWords());
         manageCategories.setOnClickListener(v -> startActivity(new Intent(this, CategoryManagerActivity.class)));
+        cancel.setOnClickListener(v -> finish());
     }
 
     @Override

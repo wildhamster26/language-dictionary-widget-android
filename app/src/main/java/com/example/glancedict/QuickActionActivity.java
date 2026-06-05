@@ -2,8 +2,8 @@ package com.example.glancedict;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -48,10 +48,13 @@ public class QuickActionActivity extends Activity {
         nativeInput.setText(word.nativeWord);
         translationInput.setText(word.translatedWord);
 
-        Button save = findViewById(R.id.save_word);
-        Button delete = findViewById(R.id.delete_word);
+        View save = findViewById(R.id.save_word);
+        View delete = findViewById(R.id.delete_word);
+        View cancel = findViewById(R.id.edit_word_cancel);
+        
         save.setOnClickListener(v -> saveWord());
         delete.setOnClickListener(v -> deleteWord());
+        cancel.setOnClickListener(v -> finish());
     }
 
     @Override
