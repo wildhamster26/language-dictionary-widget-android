@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,29 +37,40 @@ public class SettingsActivity extends Activity {
         }
 
         db = new DictionaryDbHelper(this);
-        fontValue = findViewById(R.id.font_value);
-        columnsValue = findViewById(R.id.columns_value);
+
+        // Display Section Header
+        View displayHeader = findViewById(R.id.display_header);
+        ((TextView) displayHeader.findViewById(R.id.section_title)).setText("Display");
+
+        // Font Size Control
+        View fontSizeRow = findViewById(R.id.font_size_row);
+        ((TextView) fontSizeRow.findViewById(R.id.control_label)).setText("Font Size");
+        ((TextView) fontSizeRow.findViewById(R.id.control_sublabel)).setText("Adjust text readability");
+        fontValue = fontSizeRow.findViewById(R.id.control_value);
+        fontSizeRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeFontSize(-1));
+        fontSizeRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeFontSize(1));
+
+        // Columns Control
+        View columnsRow = findViewById(R.id.columns_row);
+        ((TextView) columnsRow.findViewById(R.id.control_label)).setText("Columns");
+        ((TextView) columnsRow.findViewById(R.id.control_sublabel)).setText("Grid layout density");
+        columnsValue = columnsRow.findViewById(R.id.control_value);
+        columnsRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeColumnCount(-1));
+        columnsRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeColumnCount(1));
+
+        // Categories Section Header
+        View categoriesHeader = findViewById(R.id.categories_header);
+        ((TextView) categoriesHeader.findViewById(R.id.section_title)).setText("Displayed Categories");
+
         categoryChecks = findViewById(R.id.category_checks);
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
         columnCount = DictionaryPrefs.getColumnCount(this);
 
-        Button decrement = findViewById(R.id.font_decrement);
-        Button increment = findViewById(R.id.font_increment);
-        Button columnsDecrement = findViewById(R.id.columns_decrement);
-        Button columnsIncrement = findViewById(R.id.columns_increment);
-        Button done = findViewById(R.id.settings_done);
-        Button addWords = findViewById(R.id.settings_add_words);
-        Button selectAll = findViewById(R.id.select_all);
-        Button deselectAll = findViewById(R.id.deselect_all);
+        View save = findViewById(R.id.settings_done);
+        View cancel = findViewById(R.id.settings_cancel);
 
-        selectAll.setOnClickListener(v -> setAllCategoriesChecked(true));
-        deselectAll.setOnClickListener(v -> setAllCategoriesChecked(false));
-        addWords.setOnClickListener(v -> startActivity(new Intent(this, AddWordActivity.class)));
-        decrement.setOnClickListener(v -> changeFontSize(-1));
-        increment.setOnClickListener(v -> changeFontSize(1));
-        columnsDecrement.setOnClickListener(v -> changeColumnCount(-1));
-        columnsIncrement.setOnClickListener(v -> changeColumnCount(1));
-        done.setOnClickListener(v -> {
+        cancel.setOnClickListener(v -> finish());
+        save.setOnClickListener(v -> {
             saveActiveCategories();
             db.refreshLongestTextCache(this);
             WidgetRefresh.refreshAll(this);
@@ -119,35 +131,34 @@ public class SettingsActivity extends Activity {
         Set<Long> activeIds = DictionaryPrefs.getActiveCategoryIds(this);
         List<Category> categories = db.getCategories();
         categoryChecks.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+
         for (Category category : categories) {
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(category.name);
-            checkBox.setTag(category.id);
+            View itemView = inflater.inflate(R.layout.component_category_select_item, categoryChecks, false);
+            
+            TextView nameView = itemView.findViewById(R.id.category_name);
+            CheckBox checkBox = itemView.findViewById(R.id.category_checkbox);
+
+            nameView.setText(category.name);
+            itemView.setTag(category.id);
             checkBox.setChecked(activeIds == null || activeIds.contains(category.id));
-            checkBox.setMinHeight(dp(44));
-            categoryChecks.addView(checkBox);
+            
+            // Reusable row click to toggle checkbox
+            itemView.setOnClickListener(v -> checkBox.toggle());
+
+            categoryChecks.addView(itemView);
         }
     }
 
     private void saveActiveCategories() {
         Set<Long> activeIds = new HashSet<>();
         for (int i = 0; i < categoryChecks.getChildCount(); i++) {
-            CheckBox checkBox = (CheckBox) categoryChecks.getChildAt(i);
+            View itemView = categoryChecks.getChildAt(i);
+            CheckBox checkBox = itemView.findViewById(R.id.category_checkbox);
             if (checkBox.isChecked()) {
-                activeIds.add((Long) checkBox.getTag());
+                activeIds.add((Long) itemView.getTag());
             }
         }
         DictionaryPrefs.setActiveCategoryIds(this, activeIds);
-    }
-
-    private void setAllCategoriesChecked(boolean checked) {
-        for (int i = 0; i < categoryChecks.getChildCount(); i++) {
-            CheckBox checkBox = (CheckBox) categoryChecks.getChildAt(i);
-            checkBox.setChecked(checked);
-        }
-    }
-
-    private int dp(int value) {
-        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
     }
 }

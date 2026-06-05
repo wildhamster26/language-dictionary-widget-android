@@ -28,4 +28,8 @@
     <color name="item_bg">#F9FAFB</color>
     <color name="trash_icon_tint">#9CA3AF</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="checkbox_checked">#052D1F</color>
+    <color name="control_bg">#F9FAFB</color>
+    <color name="section_icon_tint">#052D1F</color>
 </resources>

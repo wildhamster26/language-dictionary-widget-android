@@ -3,6 +3,8 @@
     <color name="button_create_bg">#052D1F</color>
     <color name="category_bg">#D7EADF</color>
     <color name="category_text">#274F3D</color>
+    <color name="checkbox_checked">#052D1F</color>
+    <color name="control_bg">#F9FAFB</color>
     <color name="danger">#713638</color>
     <color name="ic_launcher_background">#274F3D</color>
     <color name="icon_folder_bg">#EDF5F1</color>
@@ -14,6 +16,7 @@
     <color name="primary_fixed_dim">#BFDCC9</color>
     <color name="secondary">#0E6C4A</color>
     <color name="section_header">#374151</color>
+    <color name="section_icon_tint">#052D1F</color>
     <color name="surface">#F8F9FA</color>
     <color name="surface_high">#E5EBE7</color>
     <color name="surface_low">#EEF2EF</color>

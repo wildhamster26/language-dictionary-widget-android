@@ -1,4 +1,4 @@
-#Fri Jun 05 09:21:12 CST 2026
+#Fri Jun 05 10:05:59 CST 2026
 base.0=/Users/sagy/Desktop/coding/language-dictionary-widget/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 base.1=/Users/sagy/Desktop/coding/language-dictionary-widget/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
 path.0=0/classes.dex

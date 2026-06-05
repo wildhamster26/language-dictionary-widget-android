@@ -1,153 +1,94 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/surface_lowest"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- Top Bar -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/dialog_panel_background"
-        android:orientation="vertical"
-        android:padding="18dp">
+        android:layout_height="64dp"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/settings_cancel"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="Close"
+            android:src="@drawable/ic_close" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Widget settings"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/settings_cancel"
+            android:layout_toStartOf="@id/settings_done"
+            android:gravity="start"
+            android:paddingStart="16dp"
+            android:text="Widget Settings"
             android:textColor="@color/word_native"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
-
-        <Button
-            android:id="@+id/settings_add_words"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="14dp"
-            android:text="Add words" />
+            android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="Font size"
-            android:textColor="@color/word_translation"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/font_decrement"
-                android:layout_width="56dp"
-                android:layout_height="48dp"
-                android:text="-" />
-
-            <TextView
-                android:id="@+id/font_value"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/word_native"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
-
-            <Button
-                android:id="@+id/font_increment"
-                android:layout_width="56dp"
-                android:layout_height="48dp"
-                android:text="+" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="Columns"
-            android:textColor="@color/word_translation"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/columns_decrement"
-                android:layout_width="56dp"
-                android:layout_height="48dp"
-                android:text="-" />
-
-            <TextView
-                android:id="@+id/columns_value"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/word_native"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
-
-            <Button
-                android:id="@+id/columns_increment"
-                android:layout_width="56dp"
-                android:layout_height="48dp"
-                android:text="+" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="Active categories"
-            android:textColor="@color/word_translation"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/select_all"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/select_all"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/deselect_all"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/deselect_all"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/category_checks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <Button
             android:id="@+id/settings_done"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="16dp"
-            android:text="Done" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_create_button"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="40dp">
+
+            <!-- Display Section -->
+            <include
+                android:id="@+id/display_header"
+                layout="@layout/component_section_header" />
+
+            <include
+                android:id="@+id/font_size_row"
+                layout="@layout/component_settings_control" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/outline_soft" />
+
+            <include
+                android:id="@+id/columns_row"
+                layout="@layout/component_settings_control" />
+
+            <!-- Active Categories Section -->
+            <include
+                android:id="@+id/categories_header"
+                layout="@layout/component_section_header" />
+
+            <LinearLayout
+                android:id="@+id/category_checks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
