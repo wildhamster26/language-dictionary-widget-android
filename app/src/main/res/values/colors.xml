@@ -16,4 +16,16 @@
     <color name="primary">#274F3D</color>
     <color name="secondary">#0E6C4A</color>
     <color name="primary_fixed_dim">#BFDCC9</color>
+
+    <!-- New design colors -->
+    <color name="title_green">#97C5AF</color>
+    <color name="input_bg_light">#EEF2F1</color>
+    <color name="button_create_bg">#052D1F</color>
+    <color name="text_hint">#4B5563</color>
+    <color name="section_header">#374151</color>
+    <color name="icon_folder_bg">#EDF5F1</color>
+    <color name="icon_folder_tint">#134E37</color>
+    <color name="item_bg">#F9FAFB</color>
+    <color name="trash_icon_tint">#9CA3AF</color>
+    <color name="white">#FFFFFF</color>
 </resources>

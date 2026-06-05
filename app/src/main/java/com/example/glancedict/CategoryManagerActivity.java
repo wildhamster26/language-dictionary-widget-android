@@ -3,8 +3,10 @@ package com.example.glancedict;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +27,8 @@ public class CategoryManagerActivity extends Activity {
         nameInput = findViewById(R.id.category_name_input);
         categoryList = findViewById(R.id.category_list);
 
-        Button create = findViewById(R.id.create_category);
-        Button done = findViewById(R.id.categories_done);
+        View create = findViewById(R.id.create_category);
+        View done = findViewById(R.id.categories_done);
         create.setOnClickListener(v -> createCategory());
         done.setOnClickListener(v -> {
             WidgetRefresh.refreshAll(this);
@@ -45,9 +47,14 @@ public class CategoryManagerActivity extends Activity {
     }
 
     private void createCategory() {
-        long id = db.createCategory(nameInput.getText().toString());
-        if (id <= 0) {
+        String name = nameInput.getText().toString().trim();
+        if (name.isEmpty()) {
             Toast.makeText(this, "Enter a category name.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        long id = db.createCategory(name);
+        if (id <= 0) {
+            Toast.makeText(this, "Category already exists or error.", Toast.LENGTH_SHORT).show();
             return;
         }
         nameInput.setText("");
@@ -60,29 +67,27 @@ public class CategoryManagerActivity extends Activity {
         categoryList.removeAllViews();
         List<Category> categories = db.getCategories();
         long defaultId = db.ensureDefaultCategory();
-        for (Category category : categories) {
-            LinearLayout row = new LinearLayout(this);
-            row.setOrientation(LinearLayout.HORIZONTAL);
-            row.setGravity(android.view.Gravity.CENTER_VERTICAL);
-            row.setMinimumHeight(dp(48));
+        LayoutInflater inflater = LayoutInflater.from(this);
 
-            TextView label = new TextView(this);
-            label.setText(category.name + " (" + db.getWordCountForCategory(category.id) + ")");
-            label.setTextColor(0xFF111827);
-            label.setTextSize(16);
-            row.addView(label, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        for (Category category : categories) {
+            View itemView = inflater.inflate(R.layout.component_category_item, categoryList, false);
+
+            TextView nameView = itemView.findViewById(R.id.category_name);
+            TextView countView = itemView.findViewById(R.id.word_count);
+            ImageView deleteIcon = itemView.findViewById(R.id.delete_category);
+
+            nameView.setText(category.name);
+            int wordCount = db.getWordCountForCategory(category.id);
+            countView.setText(wordCount + (wordCount == 1 ? " Word" : " Words"));
 
             if (category.id != defaultId) {
-                Button delete = new Button(this);
-                delete.setText("Delete");
-                delete.setTextColor(getColor(R.color.danger));
-                delete.setOnClickListener(v -> confirmDelete(category));
-                row.addView(delete, new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        dp(44)));
+                deleteIcon.setVisibility(View.VISIBLE);
+                deleteIcon.setOnClickListener(v -> confirmDelete(category));
+            } else {
+                deleteIcon.setVisibility(View.GONE);
             }
 
-            categoryList.addView(row);
+            categoryList.addView(itemView);
         }
     }
 
@@ -102,9 +107,5 @@ public class CategoryManagerActivity extends Activity {
                     WidgetRefresh.refreshAll(this);
                 })
                 .show();
-    }
-
-    private int dp(int value) {
-        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
     }
 }
