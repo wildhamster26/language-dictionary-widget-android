@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="23"
-        android:targetSdkVersion="35" />
+        android:targetSdkVersion="36" />
 
     <permission
         android:name="com.example.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"

@@ -10,7 +10,7 @@ public final class DictionaryPrefs {
     public static final int DEFAULT_FONT_SP = 14;
     public static final int MIN_FONT_SP = 10;
     public static final int MAX_FONT_SP = 36;
-    public static final int DEFAULT_COLUMN_COUNT = 1;
+    public static final int DEFAULT_COLUMN_COUNT = 4;
     public static final int MIN_COLUMN_COUNT = 1;
     public static final int MAX_COLUMN_COUNT = 4;
 

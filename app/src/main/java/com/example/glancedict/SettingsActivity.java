@@ -2,6 +2,7 @@ package com.example.glancedict;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ public class SettingsActivity extends Activity {
         if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
             setResult(RESULT_CANCELED);
             setFinishOnTouchOutside(false);
+        } else {
+            checkAndRequestWidgetPinning();
         }
 
         db = new DictionaryDbHelper(this);
@@ -162,5 +165,19 @@ public class SettingsActivity extends Activity {
             }
         }
         DictionaryPrefs.setActiveCategoryIds(this, activeIds);
+    }
+
+    private void checkAndRequestWidgetPinning() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            ComponentName provider = new ComponentName(this, DictionaryWidgetProvider.class);
+            int[] ids = appWidgetManager.getAppWidgetIds(provider);
+
+            if (ids.length == 0) {
+                if (appWidgetManager.isRequestPinAppWidgetSupported()) {
+                    appWidgetManager.requestPinAppWidget(provider, null, null);
+                }
+            }
+        }
     }
 }

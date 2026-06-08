@@ -6,11 +6,10 @@ This Privacy Policy explains how Glance Dictionary handles information when you 
 
 ## Developer and Contact
 
-Glance Dictionary is provided by [Developer or Company Name].
+Glance Dictionary is provided by Sagy Gideon Mizrahi from Restart Abroad.
 
-For privacy questions or requests, contact us at: [privacy contact email or contact form URL].
+For privacy questions or requests, contact us at: sagy@joinrestartabroad.com
 
-Before publishing this policy, replace the placeholders above with the developer name that appears in the Google Play store listing and a working privacy contact method.
 
 ## Information We Collect
 
@@ -26,7 +25,7 @@ Glance Dictionary stores the information you enter only on your device so the ap
 - Vocabulary categories you create
 - Widget display settings, such as font size, column count, selected categories, and collapsed categories
 
-This information is stored locally using Android app storage. It is not sent to the developer or to any third party by Glance Dictionary.
+This information is stored locally using Android app storage. It is not sent to the the developer (Sagy), Restart Abroad or to any third party by Glance Dictionary.
 
 Depending on your Android device settings, the Android operating system may back up local app data through system backup features. Any such backup is controlled by your device and Google account settings, not by Glance Dictionary.
 
@@ -48,7 +47,7 @@ Information stored locally on your device is used only to provide app functional
 
 ## Sharing of Information
 
-Glance Dictionary does not share user data with the developer, service providers, advertisers, analytics providers, data brokers, or any other third party.
+Glance Dictionary does not share user data with the developer (Sagy), Restart Abroad, service providers, advertisers, analytics providers, data brokers, or any other third party.
 
 ## Data Retention and Deletion
 

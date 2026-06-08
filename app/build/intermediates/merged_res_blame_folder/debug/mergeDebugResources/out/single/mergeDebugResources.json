@@ -8,12 +8,12 @@
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/ic_display.xml"
     },
     {
-        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/drawable_bg_rounded_card.xml.flat",
-        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/bg_rounded_card.xml"
-    },
-    {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/drawable_ic_folder.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/ic_folder.xml"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/drawable_bg_rounded_card.xml.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/bg_rounded_card.xml"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
@@ -52,12 +52,12 @@
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/bg_checkbox_unchecked.xml"
     },
     {
-        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
-        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/mipmap-mdpi/ic_launcher_foreground.webp"
-    },
-    {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/mipmap-mdpi/ic_launcher_foreground.webp"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
@@ -108,10 +108,6 @@
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/bg_dialog_rounded.xml"
     },
     {
-        "merged": "com.example.glancedict.app-debug-32:/layout_activity_add_word.xml.flat",
-        "source": "com.example.glancedict.app-main-34:/layout/activity_add_word.xml"
-    },
-    {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/layout_widget_dictionary_3.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/layout/widget_dictionary_3.xml"
     },
@@ -150,6 +146,10 @@
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/drawable_bg_input_field.xml.flat",
         "source": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-main-34:/drawable/bg_input_field.xml"
+    },
+    {
+        "merged": "com.example.glancedict.app-debug-32:/xml_dictionary_widget_info.xml.flat",
+        "source": "com.example.glancedict.app-main-34:/xml/dictionary_widget_info.xml"
     },
     {
         "merged": "/Users/sagy/.gradle/daemon/9.0.0/com.example.glancedict.app-debug-32:/mipmap-hdpi_ic_launcher.webp.flat",
