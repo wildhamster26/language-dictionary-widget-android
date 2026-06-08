@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +23,11 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     private static final String TABLE_CATEGORIES = "categories";
     private static final String TABLE_WORDS = "words";
 
+    private final Context mContext;
+
     public DictionaryDbHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context.getApplicationContext();
     }
 
     @Override
@@ -47,6 +54,41 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("name", DEFAULT_CATEGORY);
         db.insert(TABLE_CATEGORIES, null, values);
+
+        loadInitialData(db);
+    }
+
+    private void loadInitialData(SQLiteDatabase db) {
+        try (InputStream is = mContext.getAssets().open("initial_data.json")) {
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            String json = result.toString(StandardCharsets.UTF_8.name());
+
+            List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(json);
+            long now = System.currentTimeMillis();
+
+            for (BulkWordParser.CategoryGroup group : groups) {
+                ContentValues catValues = new ContentValues();
+                catValues.put("name", group.name);
+                long catId = db.insert(TABLE_CATEGORIES, null, catValues);
+
+                if (catId != -1) {
+                    for (BulkWordParser.Pair pair : group.pairs) {
+                        ContentValues wordValues = new ContentValues();
+                        wordValues.put("category_id", catId);
+                        wordValues.put("native_word", pair.nativeWord);
+                        wordValues.put("translated_word", pair.translatedWord);
+                        wordValues.put("date_added", now);
+                        db.insert(TABLE_WORDS, null, wordValues);
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+        }
     }
 
     @Override
