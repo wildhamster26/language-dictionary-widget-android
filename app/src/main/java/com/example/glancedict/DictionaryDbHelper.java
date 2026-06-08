@@ -125,19 +125,21 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public List<Category> getCategories() {
         ensureDefaultCategory();
         List<Category> categories = new ArrayList<>();
-        Cursor cursor = getReadableDatabase().query(
-                TABLE_CATEGORIES,
-                new String[]{"id", "name"},
-                null,
-                null,
-                null,
-                null,
-                "CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC");
+        String query = "SELECT id, name, " +
+                "(SELECT COUNT(*) FROM words WHERE words.category_id = categories.id) as word_count " +
+                "FROM categories " +
+                "ORDER BY CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
+
+        Cursor cursor = getReadableDatabase().rawQuery(query, null);
         try {
             int idIndex = cursor.getColumnIndexOrThrow("id");
             int nameIndex = cursor.getColumnIndexOrThrow("name");
+            int countIndex = cursor.getColumnIndexOrThrow("word_count");
             while (cursor.moveToNext()) {
-                categories.add(new Category(cursor.getLong(idIndex), cursor.getString(nameIndex)));
+                categories.add(new Category(
+                        cursor.getLong(idIndex),
+                        cursor.getString(nameIndex),
+                        cursor.getInt(countIndex)));
             }
         } finally {
             cursor.close();

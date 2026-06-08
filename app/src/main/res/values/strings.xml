@@ -8,4 +8,5 @@
     <string name="footer_link_text">See more at Restart Abroad</string>
     <string name="add_icon">+</string>
     <string name="widget_empty_text">Tap + to add your first word</string>
+    <string name="word_count_format">%1$d Words</string>
 </resources>

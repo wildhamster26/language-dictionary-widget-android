@@ -149,6 +149,7 @@ string select_all
 string settings_icon
 string uncategorized
 string widget_empty_text
+string word_count_format
 style AppTheme
 style DangerButton
 style DialogOverlayTheme

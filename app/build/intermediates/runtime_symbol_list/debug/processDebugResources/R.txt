@@ -3968,6 +3968,7 @@ int string side_sheet_behavior 0x7f0f00aa
 int string status_bar_notification_info_overflow 0x7f0f00ab
 int string uncategorized 0x7f0f00ac
 int string widget_empty_text 0x7f0f00ad
+int string word_count_format 0x7f0f00ae
 int style AlertDialog_AppCompat 0x7f100000
 int style AlertDialog_AppCompat_Light 0x7f100001
 int style Animation_AppCompat_Dialog 0x7f100002

@@ -38,6 +38,7 @@
     <string name="settings_icon">Settings</string>
     <string name="uncategorized">Uncategorized</string>
     <string name="widget_empty_text">Tap + to add your first word</string>
+    <string name="word_count_format">%1$d Words</string>
     <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:colorAccent">@color/secondary</item>

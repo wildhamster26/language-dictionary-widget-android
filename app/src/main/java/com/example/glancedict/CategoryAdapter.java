@@ -66,7 +66,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ItemViewHolder h = (ItemViewHolder) holder;
             Category category = categories.get(position - 1);
             h.nameView.setText(category.name);
-            
+            h.wordCountView.setText(h.itemView.getContext().getString(R.string.word_count_format, category.wordCount));
+
             // Reorder handle logic
             h.reorderHandle.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -123,12 +124,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView nameView;
+        TextView wordCountView;
         View deleteButton;
         View reorderHandle;
 
         ItemViewHolder(View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.category_name);
+            wordCountView = itemView.findViewById(R.id.word_count);
             deleteButton = itemView.findViewById(R.id.delete_category);
             reorderHandle = itemView.findViewById(R.id.reorder_handle);
         }
