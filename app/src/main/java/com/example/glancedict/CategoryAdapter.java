@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
@@ -42,12 +43,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_category_manager, parent, false);
-            return new HeaderViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_category_item, parent, false);
-            return new ItemViewHolder(view);
+        switch (viewType) {
+            case TYPE_HEADER:
+                View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_category_manager, parent, false);
+                return new HeaderViewHolder(headerView);
+            case TYPE_ITEM:
+            default:
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_category_item, parent, false);
+                return new ItemViewHolder(itemView);
         }
     }
 
@@ -71,13 +74,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // Reorder handle logic
             h.reorderHandle.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.performClick();
                     dragStartListener.onDragStarted(h);
                 }
                 return false;
             });
 
             // Delete logic (hide for Uncategorized)
-            if (category.name.equals(DictionaryDbHelper.DEFAULT_CATEGORY)) {
+            if (Objects.equals(category.name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
                 h.deleteButton.setVisibility(View.GONE);
                 h.reorderHandle.setVisibility(View.INVISIBLE); // Lock Uncategorized
             } else {
@@ -98,8 +102,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (fromPosition == 0 || toPosition == 0) return;
         
         // Prevent moving "Uncategorized" (usually first item at pos 1)
-        if (categories.get(fromPosition - 1).name.equals(DictionaryDbHelper.DEFAULT_CATEGORY) ||
-            categories.get(toPosition - 1).name.equals(DictionaryDbHelper.DEFAULT_CATEGORY)) {
+        if (Objects.equals(categories.get(fromPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY) ||
+            Objects.equals(categories.get(toPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
             return;
         }
 

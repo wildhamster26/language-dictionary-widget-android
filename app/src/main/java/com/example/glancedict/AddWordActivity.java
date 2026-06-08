@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -99,8 +97,7 @@ public class AddWordActivity extends Activity {
         executor.execute(() -> {
             int saved = 0;
             RuntimeException failure = null;
-            DictionaryDbHelper workerDb = new DictionaryDbHelper(getApplicationContext());
-            try {
+            try (DictionaryDbHelper workerDb = new DictionaryDbHelper(getApplicationContext())) {
                 if (!bulk.isEmpty() && BulkWordParser.isJson(bulk)) {
                     List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(bulk);
                     for (BulkWordParser.CategoryGroup group : groups) {
@@ -122,8 +119,6 @@ public class AddWordActivity extends Activity {
                 }
             } catch (RuntimeException exception) {
                 failure = exception;
-            } finally {
-                workerDb.close();
             }
 
             int finalSaved = saved;

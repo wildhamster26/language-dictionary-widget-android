@@ -3,7 +3,6 @@ package com.example.glancedict;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,8 +45,8 @@ public class CategoryManagerActivity extends Activity implements CategoryAdapter
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                if (target.getAdapterPosition() == 0) return false;
-                adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                if (target.getBindingAdapterPosition() == 0) return false;
+                adapter.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
                 return true;
             }
 

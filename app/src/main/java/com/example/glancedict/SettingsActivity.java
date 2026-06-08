@@ -43,27 +43,27 @@ public class SettingsActivity extends Activity {
 
         // Display Section Header
         View displayHeader = findViewById(R.id.display_header);
-        ((TextView) displayHeader.findViewById(R.id.section_title)).setText("Display");
+        ((TextView) displayHeader.findViewById(R.id.section_title)).setText(R.string.settings_display_section);
 
         // Font Size Control
         View fontSizeRow = findViewById(R.id.font_size_row);
-        ((TextView) fontSizeRow.findViewById(R.id.control_label)).setText("Font Size");
-        ((TextView) fontSizeRow.findViewById(R.id.control_sublabel)).setText("Adjust text readability");
+        ((TextView) fontSizeRow.findViewById(R.id.control_label)).setText(R.string.settings_font_size);
+        ((TextView) fontSizeRow.findViewById(R.id.control_sublabel)).setText(R.string.settings_font_size_sub);
         fontValue = fontSizeRow.findViewById(R.id.control_value);
         fontSizeRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeFontSize(-1));
         fontSizeRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeFontSize(1));
 
         // Columns Control
         View columnsRow = findViewById(R.id.columns_row);
-        ((TextView) columnsRow.findViewById(R.id.control_label)).setText("Columns");
-        ((TextView) columnsRow.findViewById(R.id.control_sublabel)).setText("Grid layout density");
+        ((TextView) columnsRow.findViewById(R.id.control_label)).setText(R.string.settings_columns);
+        ((TextView) columnsRow.findViewById(R.id.control_sublabel)).setText(R.string.settings_columns_sub);
         columnsValue = columnsRow.findViewById(R.id.control_value);
         columnsRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeColumnCount(-1));
         columnsRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeColumnCount(1));
 
         // Categories Section Header
         View categoriesHeader = findViewById(R.id.categories_header);
-        ((TextView) categoriesHeader.findViewById(R.id.section_title)).setText("Displayed Categories");
+        ((TextView) categoriesHeader.findViewById(R.id.section_title)).setText(R.string.settings_categories_section);
 
         categoryChecks = findViewById(R.id.category_checks);
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
@@ -116,7 +116,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void updateFontValue() {
-        fontValue.setText(fontSizeSp + "sp");
+        fontValue.setText(getString(R.string.font_size_format, fontSizeSp));
     }
 
     private void changeColumnCount(int delta) {
@@ -129,7 +129,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void updateColumnsValue() {
-        columnsValue.setText(String.valueOf(columnCount));
+        columnsValue.setText(String.format(java.util.Locale.getDefault(), "%d", columnCount));
     }
 
     private void bindCategoryChecks() {

@@ -191,7 +191,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         }
 
         static WidgetRow category(long categoryId, String categoryName) {
-            return new WidgetRow(true, categoryId, categoryName, new ArrayList<WidgetItem>(), -categoryId);
+            return new WidgetRow(true, categoryId, categoryName, new ArrayList<>(), -categoryId);
         }
 
         static WidgetRow words(List<WidgetItem> words) {

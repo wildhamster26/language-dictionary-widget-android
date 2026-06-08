@@ -9,4 +9,11 @@
     <string name="add_icon">+</string>
     <string name="widget_empty_text">Tap + to add your first word</string>
     <string name="word_count_format">%1$d Words</string>
+    <string name="settings_display_section">Display</string>
+    <string name="settings_font_size">Font Size</string>
+    <string name="settings_font_size_sub">Adjust text readability</string>
+    <string name="settings_columns">Columns</string>
+    <string name="settings_columns_sub">Grid layout density</string>
+    <string name="settings_categories_section">Displayed Categories</string>
+    <string name="font_size_format">%1$dsp</string>
 </resources>

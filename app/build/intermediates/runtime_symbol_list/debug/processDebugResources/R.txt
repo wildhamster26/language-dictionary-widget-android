@@ -3848,6 +3848,7 @@ int string error_icon_content_description 0x7f0f0032
 int string exposed_dropdown_menu_content_description 0x7f0f0033
 int string fab_transformation_scrim_behavior 0x7f0f0034
 int string fab_transformation_sheet_behavior 0x7f0f0035
+int string font_size_format 0x7f0f00af
 int string footer_link_text 0x7f0f0036
 int string hide_bottom_view_on_scroll_behavior 0x7f0f0037
 int string icon_content_description 0x7f0f0038
@@ -3962,6 +3963,12 @@ int string searchbar_scrolling_view_behavior 0x7f0f00a4
 int string searchview_clear_text_content_description 0x7f0f00a5
 int string searchview_navigation_content_description 0x7f0f00a6
 int string select_all 0x7f0f00a7
+int string settings_categories_section 0x7f0f00b0
+int string settings_columns 0x7f0f00b1
+int string settings_columns_sub 0x7f0f00b2
+int string settings_display_section 0x7f0f00b3
+int string settings_font_size 0x7f0f00b4
+int string settings_font_size_sub 0x7f0f00b5
 int string settings_icon 0x7f0f00a8
 int string side_sheet_accessibility_pane_title 0x7f0f00a9
 int string side_sheet_behavior 0x7f0f00aa

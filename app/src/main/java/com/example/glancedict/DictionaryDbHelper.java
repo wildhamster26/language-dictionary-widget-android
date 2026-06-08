@@ -130,8 +130,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 "FROM categories " +
                 "ORDER BY CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
 
-        Cursor cursor = getReadableDatabase().rawQuery(query, null);
-        try {
+        try (Cursor cursor = getReadableDatabase().rawQuery(query, null)) {
             int idIndex = cursor.getColumnIndexOrThrow("id");
             int nameIndex = cursor.getColumnIndexOrThrow("name");
             int countIndex = cursor.getColumnIndexOrThrow("word_count");
@@ -141,28 +140,23 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                         cursor.getString(nameIndex),
                         cursor.getInt(countIndex)));
             }
-        } finally {
-            cursor.close();
         }
         return categories;
     }
 
     public Word getWord(long wordId) {
-        Cursor cursor = getReadableDatabase().query(
+        try (Cursor cursor = getReadableDatabase().query(
                 TABLE_WORDS,
                 new String[]{"id", "category_id", "native_word", "translated_word"},
                 "id = ?",
-                new String[]{String.valueOf(wordId)},
+                new String[]{"" + wordId},
                 null,
                 null,
-                null);
-        try {
+                null)) {
             if (!cursor.moveToFirst()) {
                 return null;
             }
             return readWord(cursor);
-        } finally {
-            cursor.close();
         }
     }
 
@@ -218,21 +212,18 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         values.put("category_id", categoryId);
         values.put("native_word", normalize(nativeWord));
         values.put("translated_word", normalize(translatedWord));
-        getWritableDatabase().update(TABLE_WORDS, values, "id = ?", new String[]{String.valueOf(wordId)});
+        getWritableDatabase().update(TABLE_WORDS, values, "id = ?", new String[]{"" + wordId});
     }
 
     public void deleteWord(long wordId) {
-        getWritableDatabase().delete(TABLE_WORDS, "id = ?", new String[]{String.valueOf(wordId)});
+        getWritableDatabase().delete(TABLE_WORDS, "id = ?", new String[]{"" + wordId});
     }
 
     public int getWordCountForCategory(long categoryId) {
-        Cursor cursor = getReadableDatabase().rawQuery(
+        try (Cursor cursor = getReadableDatabase().rawQuery(
                 "SELECT COUNT(*) FROM words WHERE category_id = ?",
-                new String[]{String.valueOf(categoryId)});
-        try {
+                new String[]{"" + categoryId})) {
             return cursor.moveToFirst() ? cursor.getInt(0) : 0;
-        } finally {
-            cursor.close();
         }
     }
 
@@ -244,26 +235,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
-            db.delete(TABLE_WORDS, "category_id = ?", new String[]{String.valueOf(categoryId)});
-            db.delete(TABLE_CATEGORIES, "id = ?", new String[]{String.valueOf(categoryId)});
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public void deleteCategoryMoveWordsToDefault(long categoryId) {
-        long defaultId = ensureDefaultCategory();
-        if (categoryId == defaultId) {
-            return;
-        }
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put("category_id", defaultId);
-            db.update(TABLE_WORDS, values, "category_id = ?", new String[]{String.valueOf(categoryId)});
-            db.delete(TABLE_CATEGORIES, "id = ?", new String[]{String.valueOf(categoryId)});
+            db.delete(TABLE_WORDS, "category_id = ?", new String[]{"" + categoryId});
+            db.delete(TABLE_CATEGORIES, "id = ?", new String[]{"" + categoryId});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -274,10 +247,12 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
-            for (int i = 0; i < categoryIds.size(); i++) {
+            int i = 0;
+            while (i < categoryIds.size()) {
                 ContentValues values = new ContentValues();
                 values.put("display_order", i);
-                db.update(TABLE_CATEGORIES, values, "id = ?", new String[]{String.valueOf(categoryIds.get(i))});
+                db.update(TABLE_CATEGORIES, values, "id = ?", new String[]{"" + categoryIds.get(i)});
+                i++;
             }
             db.setTransactionSuccessful();
         } finally {
@@ -329,37 +304,31 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private List<Word> getWordsForCategory(long categoryId) {
         List<Word> words = new ArrayList<>();
-        Cursor cursor = getReadableDatabase().query(
+        try (Cursor cursor = getReadableDatabase().query(
                 TABLE_WORDS,
                 new String[]{"id", "category_id", "native_word", "translated_word"},
                 "category_id = ?",
-                new String[]{String.valueOf(categoryId)},
+                new String[]{"" + categoryId},
                 null,
                 null,
-                "date_added DESC, id DESC");
-        try {
+                "date_added DESC, id DESC")) {
             while (cursor.moveToNext()) {
                 words.add(readWord(cursor));
             }
-        } finally {
-            cursor.close();
         }
         return words;
     }
 
     private Long findCategoryId(String name) {
-        Cursor cursor = getReadableDatabase().query(
+        try (Cursor cursor = getReadableDatabase().query(
                 TABLE_CATEGORIES,
                 new String[]{"id"},
                 "name = ? COLLATE NOCASE",
                 new String[]{normalize(name)},
                 null,
                 null,
-                null);
-        try {
+                null)) {
             return cursor.moveToFirst() ? cursor.getLong(0) : null;
-        } finally {
-            cursor.close();
         }
     }
 
@@ -373,28 +342,25 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private String queryLongestWordColumn(String column, Set<Long> activeCategoryIds) {
         List<String> args = new ArrayList<>();
-        String where = activeFilter("category_id", activeCategoryIds, args);
-        return queryLongestText(TABLE_WORDS, column, where, args);
+        String where = activeFilter(activeCategoryIds, args);
+        return queryLongestText(column, where, args);
     }
 
-    private String queryLongestText(String table, String column, String where, List<String> args) {
+    private String queryLongestText(String column, String where, List<String> args) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ").append(column)
-                .append(" FROM ").append(table);
+                .append(" FROM ").append(TABLE_WORDS);
         if (!where.isEmpty()) {
             sql.append(" WHERE ").append(where);
         }
         sql.append(" ORDER BY LENGTH(").append(column).append(") DESC LIMIT 1");
 
-        Cursor cursor = getReadableDatabase().rawQuery(sql.toString(), args.toArray(new String[0]));
-        try {
+        try (Cursor cursor = getReadableDatabase().rawQuery(sql.toString(), args.toArray(new String[0]))) {
             return cursor.moveToFirst() ? cursor.getString(0) : null;
-        } finally {
-            cursor.close();
         }
     }
 
-    private String activeFilter(String column, Set<Long> activeCategoryIds, List<String> args) {
+    private String activeFilter(Set<Long> activeCategoryIds, List<String> args) {
         if (activeCategoryIds == null) {
             return "";
         }
@@ -402,14 +368,14 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             return "0";
         }
 
-        StringBuilder filter = new StringBuilder(column).append(" IN (");
+        StringBuilder filter = new StringBuilder("category_id").append(" IN (");
         int index = 0;
         for (Long id : activeCategoryIds) {
             if (index > 0) {
                 filter.append(",");
             }
             filter.append("?");
-            args.add(String.valueOf(id));
+            args.add("" + id);
             index++;
         }
         filter.append(")");

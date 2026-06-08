@@ -33,8 +33,15 @@
     <string name="add_icon">+</string>
     <string name="app_name">Glance Dictionary</string>
     <string name="deselect_all">Deselect all</string>
+    <string name="font_size_format">%1$dsp</string>
     <string name="footer_link_text">See more at Restart Abroad</string>
     <string name="select_all">Select all</string>
+    <string name="settings_categories_section">Displayed Categories</string>
+    <string name="settings_columns">Columns</string>
+    <string name="settings_columns_sub">Grid layout density</string>
+    <string name="settings_display_section">Display</string>
+    <string name="settings_font_size">Font Size</string>
+    <string name="settings_font_size_sub">Adjust text readability</string>
     <string name="settings_icon">Settings</string>
     <string name="uncategorized">Uncategorized</string>
     <string name="widget_empty_text">Tap + to add your first word</string>

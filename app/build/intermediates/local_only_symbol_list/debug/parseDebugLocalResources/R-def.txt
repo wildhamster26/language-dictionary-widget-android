@@ -144,8 +144,15 @@ mipmap ic_launcher_round
 string add_icon
 string app_name
 string deselect_all
+string font_size_format
 string footer_link_text
 string select_all
+string settings_categories_section
+string settings_columns
+string settings_columns_sub
+string settings_display_section
+string settings_font_size
+string settings_font_size_sub
 string settings_icon
 string uncategorized
 string widget_empty_text
