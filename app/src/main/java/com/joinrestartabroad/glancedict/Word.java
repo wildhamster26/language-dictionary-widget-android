@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 public class Word {
     public final long id;

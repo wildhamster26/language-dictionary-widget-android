@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.content.Context;
 import android.content.Intent;
@@ -130,7 +130,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     private void loadItems() {

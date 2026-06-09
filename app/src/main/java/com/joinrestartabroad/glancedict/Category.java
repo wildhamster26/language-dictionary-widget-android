@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import androidx.annotation.NonNull;
 

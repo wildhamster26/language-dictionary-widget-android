@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 public class DictionaryWidgetProvider extends AppWidgetProvider {
-    public static final String EXTRA_WORD_ID = "com.example.glancedict.EXTRA_WORD_ID";
-    public static final String EXTRA_CATEGORY_ID = "com.example.glancedict.EXTRA_CATEGORY_ID";
+    public static final String EXTRA_WORD_ID = "com.joinrestartabroad.glancedict.EXTRA_WORD_ID";
+    public static final String EXTRA_CATEGORY_ID = "com.joinrestartabroad.glancedict.EXTRA_CATEGORY_ID";
+
+    private static final int REQUEST_BASE_ITEM   = 20000;
+    private static final int REQUEST_BASE_FOOTER = 30000;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -64,13 +67,13 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
         Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://joinrestartabroad.com"));
         views.setOnClickPendingIntent(
                 R.id.widget_footer_link,
-                PendingIntent.getActivity(context, appWidgetId + 30000, urlIntent,
+                PendingIntent.getActivity(context, appWidgetId + REQUEST_BASE_FOOTER, urlIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
 
         Intent itemIntent = new Intent(context, QuickActionActivity.class);
         PendingIntent itemPendingIntent = PendingIntent.getActivity(
                 context,
-                appWidgetId + 20000,
+                appWidgetId + REQUEST_BASE_ITEM,
                 itemIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         views.setPendingIntentTemplate(collectionId, itemPendingIntent);

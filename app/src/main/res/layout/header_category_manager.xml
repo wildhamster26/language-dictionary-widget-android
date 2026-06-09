@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:hint="New category name..."
+            android:hint="@string/hint_new_category_name"
             android:inputType="textCapWords"
             android:textColor="@color/word_native"
             android:textColorHint="@color/text_hint"
@@ -31,7 +31,7 @@
             style="@style/PrimaryButton"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:text="Create" />
+            android:text="@string/action_create" />
     </LinearLayout>
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
-        android:text="YOUR CATEGORIES"
+        android:text="@string/label_your_categories"
         android:textColor="@color/section_header"
         android:textSize="12sp"
         android:textStyle="bold"

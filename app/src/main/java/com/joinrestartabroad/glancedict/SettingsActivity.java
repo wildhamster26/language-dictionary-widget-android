@@ -1,10 +1,12 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SettingsActivity extends Activity {
     private DictionaryDbHelper db;
@@ -23,6 +27,9 @@ public class SettingsActivity extends Activity {
     private int fontSizeSp;
     private int columnCount;
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private boolean destroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +84,17 @@ public class SettingsActivity extends Activity {
         topCancel.setOnClickListener(v -> finish());
         save.setOnClickListener(v -> {
             saveActiveCategories();
-            db.refreshLongestTextCache(this);
-            WidgetRefresh.refreshAll(this);
-            finishConfiguration();
+            save.setEnabled(false);
+            executor.execute(() -> {
+                db.refreshLongestTextCache(getApplicationContext());
+                mainHandler.post(() -> {
+                    if (!destroyed) {
+                        save.setEnabled(true);
+                        WidgetRefresh.refreshAll(SettingsActivity.this);
+                        finishConfiguration();
+                    }
+                });
+            });
         });
 
         updateFontValue();
@@ -101,6 +116,8 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        destroyed = true;
+        executor.shutdownNow();
         if (db != null) {
             db.close();
         }

@@ -16,9 +16,8 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# more helpful stack traces in case of errors:
-#-keepattributes SourceFile,LineNumberTable
+# Preserve file names and line numbers in stack traces for production crash reports.
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name:

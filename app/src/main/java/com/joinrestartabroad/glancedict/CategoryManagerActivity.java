@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
 import android.app.AlertDialog;

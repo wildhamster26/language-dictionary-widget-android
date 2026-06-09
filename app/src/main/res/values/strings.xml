@@ -16,4 +16,28 @@
     <string name="settings_columns_sub">Grid layout density</string>
     <string name="settings_categories_section">Displayed Categories</string>
     <string name="font_size_format">%1$dsp</string>
+
+    <string name="title_add_words">Add Words</string>
+    <string name="title_edit_word">Edit Word</string>
+    <string name="title_widget_settings">Widget Settings</string>
+    <string name="title_manage_categories">Manage Categories</string>
+
+    <string name="label_category">CATEGORY</string>
+    <string name="label_word_pair">WORD PAIR</string>
+    <string name="label_bulk_upload">BULK UPLOAD</string>
+    <string name="label_your_categories">YOUR CATEGORIES</string>
+
+    <string name="hint_native_word">Native word</string>
+    <string name="hint_translated_word">Translated word</string>
+    <string name="hint_bulk_upload">word, translation\nword, translation</string>
+    <string name="hint_new_category_name">New category name…</string>
+
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_create">Create</string>
+
+    <string name="content_description_close">Close</string>
+    <string name="content_description_back">Back</string>
+    <string name="content_description_reorder">Reorder</string>
 </resources>

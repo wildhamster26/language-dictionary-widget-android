@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -87,7 +87,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                     }
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            android.util.Log.e("DictionaryDbHelper", "Failed to load initial data", e);
         }
     }
 
@@ -128,9 +129,9 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         String query = "SELECT id, name, " +
                 "(SELECT COUNT(*) FROM words WHERE words.category_id = categories.id) as word_count " +
                 "FROM categories " +
-                "ORDER BY CASE WHEN name = '" + DEFAULT_CATEGORY + "' THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
+                "ORDER BY CASE WHEN name = ? THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
 
-        try (Cursor cursor = getReadableDatabase().rawQuery(query, null)) {
+        try (Cursor cursor = getReadableDatabase().rawQuery(query, new String[]{DEFAULT_CATEGORY})) {
             int idIndex = cursor.getColumnIndexOrThrow("id");
             int nameIndex = cursor.getColumnIndexOrThrow("name");
             int countIndex = cursor.getColumnIndexOrThrow("word_count");

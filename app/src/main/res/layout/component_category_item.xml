@@ -14,7 +14,7 @@
         android:layout_height="24dp"
         android:layout_marginEnd="12dp"
         android:src="@drawable/ic_reorder"
-        android:contentDescription="Reorder" />
+        android:contentDescription="@string/content_description_reorder" />
 
     <View
         android:id="@+id/folder_icon_container"
@@ -59,7 +59,7 @@
         style="@style/SmallSecondaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="@string/action_delete"
         android:textColor="@color/danger"
         android:visibility="gone" />
 

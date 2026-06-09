@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +117,7 @@ public final class BulkWordParser {
 
     private static int findFirstDelimiter(String line) {
         int result = -1;
-        char[] delimiters = new char[]{',', '-', ':'};
+        char[] delimiters = new char[]{',', ':'};
         for (char delimiter : delimiters) {
             int index = line.indexOf(delimiter);
             if (index >= 0 && (result < 0 || index < result)) {

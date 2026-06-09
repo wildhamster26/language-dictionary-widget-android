@@ -16,14 +16,14 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:contentDescription="Close"
+            android:contentDescription="@string/content_description_close"
             android:src="@drawable/ic_close" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Edit Word"
+            android:text="@string/title_edit_word"
             android:textColor="@color/button_create_bg"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:text="CATEGORY"
+            android:text="@string/label_category"
             android:textColor="@color/section_header"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:text="WORD PAIR"
+            android:text="@string/label_word_pair"
             android:textColor="@color/section_header"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="Native word"
+                android:hint="@string/hint_native_word"
                 android:inputType="textCapSentences"
                 android:textColor="@color/word_native"
                 android:textColorHint="@color/text_hint"
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="Translated word"
+                android:hint="@string/hint_translated_word"
                 android:inputType="textCapSentences"
                 android:textColor="@color/word_native"
                 android:textColorHint="@color/text_hint"
@@ -125,14 +125,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
-            android:text="Delete" />
+            android:text="@string/action_delete" />
 
         <TextView
             android:id="@+id/save_word"
             style="@style/PrimaryButton"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Save" />
+            android:text="@string/action_save" />
     </LinearLayout>
 
 </LinearLayout>

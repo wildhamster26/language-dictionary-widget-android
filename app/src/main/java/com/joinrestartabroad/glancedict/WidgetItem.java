@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 public class WidgetItem {
     public final boolean categoryHeader;

@@ -1,4 +1,4 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;

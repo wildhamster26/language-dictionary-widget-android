@@ -1,5 +1,5 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.example.glancedict.SettingsActivity"
+    android:configure="com.joinrestartabroad.glancedict.SettingsActivity"
     android:initialLayout="@layout/widget_dictionary"
     android:minWidth="180dp"
     android:minHeight="110dp"

@@ -1,7 +1,9 @@
-package com.example.glancedict;
+package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -9,6 +11,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class QuickActionActivity extends Activity {
     private DictionaryDbHelper db;
@@ -17,6 +21,9 @@ public class QuickActionActivity extends Activity {
     private Spinner categorySpinner;
     private EditText nativeInput;
     private EditText translationInput;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private boolean destroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,7 @@ public class QuickActionActivity extends Activity {
         View save = findViewById(R.id.save_word);
         View delete = findViewById(R.id.delete_word);
         View cancel = findViewById(R.id.edit_word_cancel);
-        
+
         save.setOnClickListener(v -> saveWord());
         delete.setOnClickListener(v -> deleteWord());
         cancel.setOnClickListener(v -> finish());
@@ -60,6 +67,8 @@ public class QuickActionActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        destroyed = true;
+        executor.shutdownNow();
         if (db != null) {
             db.close();
         }
@@ -91,16 +100,29 @@ public class QuickActionActivity extends Activity {
             return;
         }
 
-        db.updateWord(wordId, category.id, nativeWord, translatedWord);
-        db.refreshLongestTextCache(this);
-        WidgetRefresh.refreshAll(this);
-        finish();
+        long catId = category.id;
+        executor.execute(() -> {
+            db.updateWord(wordId, catId, nativeWord, translatedWord);
+            db.refreshLongestTextCache(getApplicationContext());
+            mainHandler.post(() -> {
+                if (!destroyed) {
+                    WidgetRefresh.refreshAll(QuickActionActivity.this);
+                    finish();
+                }
+            });
+        });
     }
 
     private void deleteWord() {
-        db.deleteWord(wordId);
-        db.refreshLongestTextCache(this);
-        WidgetRefresh.refreshAll(this);
-        finish();
+        executor.execute(() -> {
+            db.deleteWord(wordId);
+            db.refreshLongestTextCache(getApplicationContext());
+            mainHandler.post(() -> {
+                if (!destroyed) {
+                    WidgetRefresh.refreshAll(QuickActionActivity.this);
+                    finish();
+                }
+            });
+        });
     }
 }

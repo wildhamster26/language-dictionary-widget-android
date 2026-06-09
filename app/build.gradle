@@ -9,11 +9,11 @@ dependencies {
 }
 
 android {
-    namespace "com.example.glancedict"
+    namespace "com.joinrestartabroad.glancedict"
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.example.glancedict"
+        applicationId "com.joinrestartabroad.glancedict"
         minSdk 23
         targetSdk 36
         versionCode 1
