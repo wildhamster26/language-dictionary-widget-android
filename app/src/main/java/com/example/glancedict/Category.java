@@ -1,5 +1,7 @@
 package com.example.glancedict;
 
+import androidx.annotation.NonNull;
+
 public class Category {
     public final long id;
     public final String name;
@@ -11,6 +13,7 @@ public class Category {
         this.wordCount = wordCount;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;
