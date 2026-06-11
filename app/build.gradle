@@ -3,28 +3,29 @@ plugins {
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.7.0"
-    implementation "androidx.recyclerview:recyclerview:1.3.2"
-    implementation "com.google.android.material:material:1.12.0"
+    implementation "androidx.appcompat:appcompat:1.7.1"
+    implementation "androidx.core:core:1.19.0"
+    implementation "androidx.recyclerview:recyclerview:1.4.0"
+    implementation "com.google.android.material:material:1.14.0"
 }
 
 android {
-    namespace "com.joinrestartabroad.glancedict"
-    compileSdk 36
+    namespace = "com.joinrestartabroad.glancedict"
+    compileSdk = 37
 
     defaultConfig {
-        applicationId "com.joinrestartabroad.glancedict"
-        minSdk 23
-        targetSdk 36
-        versionCode 2
-        versionName '1.1'
+        applicationId = "com.joinrestartabroad.glancedict"
+        minSdk = 23
+        targetSdk = 37
+        versionCode = 2
+        versionName = "1.1"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 }

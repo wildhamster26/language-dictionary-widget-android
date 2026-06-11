@@ -62,7 +62,7 @@ public final class DictionaryPrefs {
             return null;
         }
 
-        Set<String> stored = preferences.getStringSet(KEY_ACTIVE_CATEGORY_IDS, new HashSet<String>());
+        Set<String> stored = preferences.getStringSet(KEY_ACTIVE_CATEGORY_IDS, new HashSet<>());
         Set<Long> ids = new HashSet<>();
         for (String value : stored) {
             try {
@@ -83,7 +83,7 @@ public final class DictionaryPrefs {
     }
 
     public static Set<Long> getCollapsedCategoryIds(Context context) {
-        Set<String> stored = prefs(context).getStringSet(KEY_COLLAPSED_CATEGORY_IDS, new HashSet<String>());
+        Set<String> stored = prefs(context).getStringSet(KEY_COLLAPSED_CATEGORY_IDS, new HashSet<>());
         Set<Long> ids = new HashSet<>();
         for (String value : stored) {
             try {
@@ -104,10 +104,6 @@ public final class DictionaryPrefs {
             stored.add(String.valueOf(id));
         }
         prefs(context).edit().putStringSet(KEY_COLLAPSED_CATEGORY_IDS, stored).apply();
-    }
-
-    public static String getLongestTextCache(Context context) {
-        return prefs(context).getString(KEY_LONGEST_TEXT_CACHE, DictionaryDbHelper.DEFAULT_CATEGORY);
     }
 
     public static void setLongestTextCache(Context context, String value) {

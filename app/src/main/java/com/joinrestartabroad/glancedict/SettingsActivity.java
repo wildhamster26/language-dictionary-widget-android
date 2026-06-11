@@ -8,7 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.HashSet;
 import java.util.List;
@@ -107,6 +109,8 @@ public class SettingsActivity extends Activity {
 
         cancel.setOnClickListener(v -> finish());
         topCancel.setOnClickListener(v -> finish());
+        findViewById(R.id.privacy_policy).setOnClickListener(v ->
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url)))));
         save.setOnClickListener(v -> {
             saveActiveCategories();
             save.setEnabled(false);
@@ -142,11 +146,11 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(closeReceiver, new IntentFilter(DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(closeReceiver, new IntentFilter(DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS));
-        }
+        ContextCompat.registerReceiver(
+                this,
+                closeReceiver,
+                new IntentFilter(DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS),
+                ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
