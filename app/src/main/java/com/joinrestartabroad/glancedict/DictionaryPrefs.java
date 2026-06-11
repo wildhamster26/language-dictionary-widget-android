@@ -10,12 +10,16 @@ public final class DictionaryPrefs {
     public static final int DEFAULT_FONT_SP = 14;
     public static final int MIN_FONT_SP = 10;
     public static final int MAX_FONT_SP = 36;
+    public static final int DEFAULT_CATEGORY_FONT_SP = 12;
+    public static final int MIN_CATEGORY_FONT_SP = 8;
+    public static final int MAX_CATEGORY_FONT_SP = 36;
     public static final int DEFAULT_COLUMN_COUNT = 4;
     public static final int MIN_COLUMN_COUNT = 1;
     public static final int MAX_COLUMN_COUNT = 4;
 
     private static final String PREFS = "dictionary_widget_prefs";
     private static final String KEY_FONT_SP = "font_size_sp";
+    private static final String KEY_CATEGORY_FONT_SP = "category_font_size_sp";
     private static final String KEY_COLUMN_COUNT = "column_count";
     private static final String KEY_ACTIVE_CATEGORY_IDS = "active_categories";
     private static final String KEY_LONGEST_TEXT_CACHE = "longest_text_cache";
@@ -31,6 +35,15 @@ public final class DictionaryPrefs {
     public static void setFontSizeSp(Context context, int fontSizeSp) {
         int clamped = Math.max(MIN_FONT_SP, Math.min(MAX_FONT_SP, fontSizeSp));
         prefs(context).edit().putInt(KEY_FONT_SP, clamped).apply();
+    }
+
+    public static int getCategoryFontSizeSp(Context context) {
+        return prefs(context).getInt(KEY_CATEGORY_FONT_SP, DEFAULT_CATEGORY_FONT_SP);
+    }
+
+    public static void setCategoryFontSizeSp(Context context, int fontSizeSp) {
+        int clamped = Math.max(MIN_CATEGORY_FONT_SP, Math.min(MAX_CATEGORY_FONT_SP, fontSizeSp));
+        prefs(context).edit().putInt(KEY_CATEGORY_FONT_SP, clamped).apply();
     }
 
     public static int getColumnCount(Context context) {

@@ -12,6 +12,8 @@
     <string name="settings_display_section">Display</string>
     <string name="settings_font_size">Font Size</string>
     <string name="settings_font_size_sub">Adjust text readability</string>
+    <string name="settings_category_font_size">Category Font Size</string>
+    <string name="settings_category_font_size_sub">Size of category header labels</string>
     <string name="settings_columns">Columns</string>
     <string name="settings_columns_sub">Grid layout density</string>
     <string name="settings_categories_section">Displayed Categories</string>

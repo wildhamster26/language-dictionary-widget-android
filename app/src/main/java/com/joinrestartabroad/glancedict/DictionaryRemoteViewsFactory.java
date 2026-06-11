@@ -17,6 +17,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private final DictionaryDbHelper db;
     private List<WidgetRow> rows = new ArrayList<>();
     private int fontSizeSp = DictionaryPrefs.DEFAULT_FONT_SP;
+    private int categoryFontSizeSp = DictionaryPrefs.DEFAULT_CATEGORY_FONT_SP;
     private int columnCount = DictionaryPrefs.DEFAULT_COLUMN_COUNT;
     private Set<Long> collapsedCategoryIds = new HashSet<>();
 
@@ -75,7 +76,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         if (row.categoryHeader) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_category_item);
             views.setTextViewText(R.id.category_header, row.categoryName);
-            views.setTextViewTextSize(R.id.category_header, TypedValue.COMPLEX_UNIT_SP, Math.max(10, fontSizeSp - 2));
+            views.setTextViewTextSize(R.id.category_header, TypedValue.COMPLEX_UNIT_SP, categoryFontSizeSp);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_CATEGORY_ID, row.categoryId);
             views.setOnClickFillInIntent(R.id.category_header, fillInIntent);
@@ -135,6 +136,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     private void loadItems() {
         fontSizeSp = DictionaryPrefs.getFontSizeSp(context);
+        categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(context);
         columnCount = DictionaryPrefs.getColumnCount(context);
         collapsedCategoryIds = DictionaryPrefs.getCollapsedCategoryIds(context);
         rows = buildRows(db.getWidgetItems(DictionaryPrefs.getActiveCategoryIds(context)));

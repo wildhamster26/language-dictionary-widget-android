@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.glancedict"
+    package="com.joinrestartabroad.glancedict"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -9,11 +9,10 @@
         android:targetSdkVersion="36" />
 
     <permission
-        android:name="com.example.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.joinrestartabroad.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-
+    <uses-permission android:name="com.joinrestartabroad.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" /> <!-- allowBackup="true": user vocabulary is intentionally backed up to Google Drive -->
     <application
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -25,19 +24,19 @@
         android:testOnly="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.glancedict.CategoryManagerActivity"
+            android:name="com.joinrestartabroad.glancedict.CategoryManagerActivity"
             android:excludeFromRecents="true"
             android:theme="@style/DialogOverlayTheme" />
         <activity
-            android:name="com.example.glancedict.QuickActionActivity"
+            android:name="com.joinrestartabroad.glancedict.QuickActionActivity"
             android:excludeFromRecents="true"
             android:theme="@style/DialogOverlayTheme" />
         <activity
-            android:name="com.example.glancedict.AddWordActivity"
+            android:name="com.joinrestartabroad.glancedict.AddWordActivity"
             android:excludeFromRecents="true"
             android:theme="@style/DialogOverlayTheme" />
         <activity
-            android:name="com.example.glancedict.SettingsActivity"
+            android:name="com.joinrestartabroad.glancedict.SettingsActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/DialogOverlayTheme" >
@@ -49,12 +48,12 @@
         </activity>
 
         <service
-            android:name="com.example.glancedict.DictionaryWidgetService"
+            android:name="com.joinrestartabroad.glancedict.DictionaryWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver
-            android:name="com.example.glancedict.DictionaryWidgetProvider"
+            android:name="com.joinrestartabroad.glancedict.DictionaryWidgetProvider"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -67,7 +66,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.example.glancedict.androidx-startup"
+            android:authorities="com.joinrestartabroad.glancedict.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"

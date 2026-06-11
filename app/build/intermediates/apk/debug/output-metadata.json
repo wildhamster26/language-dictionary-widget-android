@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.glancedict",
+  "applicationId": "com.joinrestartabroad.glancedict",
   "variantName": "debug",
   "elements": [
     {

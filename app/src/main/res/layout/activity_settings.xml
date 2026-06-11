@@ -57,6 +57,16 @@
                 android:background="@color/outline_soft" />
 
             <include
+                android:id="@+id/category_font_size_row"
+                layout="@layout/component_settings_control" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/outline_soft" />
+
+            <include
                 android:id="@+id/columns_row"
                 layout="@layout/component_settings_control" />
 

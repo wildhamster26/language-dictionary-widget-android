@@ -22,9 +22,11 @@ import java.util.concurrent.Executors;
 public class SettingsActivity extends Activity {
     private DictionaryDbHelper db;
     private TextView fontValue;
+    private TextView categoryFontValue;
     private TextView columnsValue;
     private LinearLayout categoryChecks;
     private int fontSizeSp;
+    private int categoryFontSizeSp;
     private int columnCount;
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -60,6 +62,14 @@ public class SettingsActivity extends Activity {
         fontSizeRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeFontSize(-1));
         fontSizeRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeFontSize(1));
 
+        // Category Font Size Control
+        View categoryFontSizeRow = findViewById(R.id.category_font_size_row);
+        ((TextView) categoryFontSizeRow.findViewById(R.id.control_label)).setText(R.string.settings_category_font_size);
+        ((TextView) categoryFontSizeRow.findViewById(R.id.control_sublabel)).setText(R.string.settings_category_font_size_sub);
+        categoryFontValue = categoryFontSizeRow.findViewById(R.id.control_value);
+        categoryFontSizeRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeCategoryFontSize(-1));
+        categoryFontSizeRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeCategoryFontSize(1));
+
         // Columns Control
         View columnsRow = findViewById(R.id.columns_row);
         ((TextView) columnsRow.findViewById(R.id.control_label)).setText(R.string.settings_columns);
@@ -74,6 +84,7 @@ public class SettingsActivity extends Activity {
 
         categoryChecks = findViewById(R.id.category_checks);
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
+        categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(this);
         columnCount = DictionaryPrefs.getColumnCount(this);
 
         View save = findViewById(R.id.settings_done);
@@ -98,6 +109,7 @@ public class SettingsActivity extends Activity {
         });
 
         updateFontValue();
+        updateCategoryFontValue();
         updateColumnsValue();
         bindCategoryChecks();
     }
@@ -134,6 +146,19 @@ public class SettingsActivity extends Activity {
 
     private void updateFontValue() {
         fontValue.setText(getString(R.string.font_size_format, fontSizeSp));
+    }
+
+    private void changeCategoryFontSize(int delta) {
+        categoryFontSizeSp = Math.max(
+                DictionaryPrefs.MIN_CATEGORY_FONT_SP,
+                Math.min(DictionaryPrefs.MAX_CATEGORY_FONT_SP, categoryFontSizeSp + delta));
+        DictionaryPrefs.setCategoryFontSizeSp(this, categoryFontSizeSp);
+        updateCategoryFontValue();
+        WidgetRefresh.refreshAll(this);
+    }
+
+    private void updateCategoryFontValue() {
+        categoryFontValue.setText(getString(R.string.font_size_format, categoryFontSizeSp));
     }
 
     private void changeColumnCount(int delta) {

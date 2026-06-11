@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-52:12
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:1-53:12
 MERGED from [com.google.android.material:material:1.12.0] /Users/sagy/.gradle/caches/9.0.0/transforms/cfceb6b18bf768d9dc2938d7cfe1dc98/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /Users/sagy/.gradle/caches/9.0.0/transforms/f1f2aeb239a106a27924a4a8c30905d7/transformed/jetified-appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/sagy/.gradle/caches/9.0.0/transforms/f9a2331c529198f4080c9cae67bef8d2/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
@@ -55,8 +55,8 @@ MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/sagy/.gra
 	xmlns:android
 		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-51:19
-INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:3:5-51:19
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:4:5-52:19
+INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:4:5-52:19
 MERGED from [com.google.android.material:material:1.12.0] /Users/sagy/.gradle/caches/9.0.0/transforms/cfceb6b18bf768d9dc2938d7cfe1dc98/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /Users/sagy/.gradle/caches/9.0.0/transforms/cfceb6b18bf768d9dc2938d7cfe1dc98/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/sagy/.gradle/caches/9.0.0/transforms/f9a2331c529198f4080c9cae67bef8d2/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -78,85 +78,85 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/sagy/.gradle/caches/
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
 	android:label
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:7:9-41
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:8:9-41
 	android:roundIcon
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:6:9-54
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:7:9-54
 	android:icon
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:5:9-43
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:6:9-43
 	android:allowBackup
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:4:9-35
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:5:9-35
 	android:theme
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:8:9-40
-activity#com.example.glancedict.CategoryManagerActivity
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:10:9-13:57
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:9:9-40
+activity#com.joinrestartabroad.glancedict.CategoryManagerActivity
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:11:9-14:57
 	android:excludeFromRecents
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:12:13-46
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:13:13-46
 	android:theme
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:13:13-54
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:14:13-54
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:11:13-52
-activity#com.example.glancedict.QuickActionActivity
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:15:9-18:57
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:12:13-52
+activity#com.joinrestartabroad.glancedict.QuickActionActivity
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:16:9-19:57
 	android:excludeFromRecents
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:17:13-46
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:18:13-46
 	android:theme
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:18:13-54
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:19:13-54
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:16:13-48
-activity#com.example.glancedict.AddWordActivity
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:20:9-23:57
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:17:13-48
+activity#com.joinrestartabroad.glancedict.AddWordActivity
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:21:9-24:57
 	android:excludeFromRecents
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:22:13-46
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:23:13-46
 	android:theme
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:23:13-54
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:24:13-54
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:21:13-44
-activity#com.example.glancedict.SettingsActivity
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:25:9-34:20
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:22:13-44
+activity#com.joinrestartabroad.glancedict.SettingsActivity
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:26:9-35:20
 	android:excludeFromRecents
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:27:13-46
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:28:13-46
 	android:exported
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:29:13-36
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:30:13-36
 	android:theme
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:28:13-54
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:29:13-54
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:26:13-45
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:27:13-45
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:30:13-33:29
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:31:13-34:29
 action#android.intent.action.MAIN
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:31:17-69
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:32:17-69
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:31:25-66
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:32:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:32:17-77
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:33:17-77
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:32:27-74
-service#com.example.glancedict.DictionaryWidgetService
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:36:9-39:40
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:33:27-74
+service#com.joinrestartabroad.glancedict.DictionaryWidgetService
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:37:9-40:40
 	android:exported
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:39:13-37
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:40:13-37
 	android:permission
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:38:13-69
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:39:13-69
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:37:13-52
-receiver#com.example.glancedict.DictionaryWidgetProvider
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:41:9-50:20
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:38:13-52
+receiver#com.joinrestartabroad.glancedict.DictionaryWidgetProvider
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:42:9-51:20
 	android:exported
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:43:13-36
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-36
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:42:13-53
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:43:13-53
 intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:44:13-46:29
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:13-47:29
 action#android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:17-84
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:17-84
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:45:25-81
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:46:25-81
 meta-data#android.appwidget.provider
-ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:47:13-49:66
+ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:13-50:66
 	android:resource
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-63
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:50:17-63
 	android:name
-		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:48:17-58
+		ADDED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml:49:17-58
 uses-sdk
 INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/sagy/Desktop/coding/language-dictionary-widget/app/src/main/AndroidManifest.xml
@@ -283,7 +283,7 @@ ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transfor
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
-permission#com.example.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.joinrestartabroad.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
@@ -293,7 +293,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
-uses-permission#com.example.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.joinrestartabroad.glancedict.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/sagy/.gradle/caches/9.0.0/transforms/444065531803089a8b95869dde8c295b/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
