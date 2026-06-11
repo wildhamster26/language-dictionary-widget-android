@@ -12,9 +12,28 @@ import android.widget.RemoteViews;
 public class DictionaryWidgetProvider extends AppWidgetProvider {
     public static final String EXTRA_WORD_ID = "com.joinrestartabroad.glancedict.EXTRA_WORD_ID";
     public static final String EXTRA_CATEGORY_ID = "com.joinrestartabroad.glancedict.EXTRA_CATEGORY_ID";
+    public static final String ACTION_WIDGET_PINNED = "com.joinrestartabroad.glancedict.ACTION_WIDGET_PINNED";
+    public static final String ACTION_CLOSE_SETTINGS = "com.joinrestartabroad.glancedict.ACTION_CLOSE_SETTINGS";
 
     private static final int REQUEST_BASE_ITEM   = 20000;
     private static final int REQUEST_BASE_FOOTER = 30000;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (ACTION_WIDGET_PINNED.equals(intent.getAction())) {
+            // Close the settings activity
+            Intent closeIntent = new Intent(ACTION_CLOSE_SETTINGS);
+            closeIntent.setPackage(context.getPackageName());
+            context.sendBroadcast(closeIntent);
+
+            // Navigate to home screen
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(homeIntent);
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

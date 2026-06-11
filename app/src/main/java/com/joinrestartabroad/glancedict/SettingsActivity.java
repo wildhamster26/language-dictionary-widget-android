@@ -1,9 +1,14 @@
 package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,6 +37,15 @@ public class SettingsActivity extends Activity {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean destroyed;
+
+    private final BroadcastReceiver closeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS.equals(intent.getAction())) {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +140,24 @@ public class SettingsActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(closeReceiver, new IntentFilter(DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS), Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(closeReceiver, new IntentFilter(DictionaryWidgetProvider.ACTION_CLOSE_SETTINGS));
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(closeReceiver);
+        } catch (IllegalArgumentException ignored) {}
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         destroyed = true;
@@ -217,7 +249,15 @@ public class SettingsActivity extends Activity {
 
             if (ids.length == 0) {
                 if (appWidgetManager.isRequestPinAppWidgetSupported()) {
-                    appWidgetManager.requestPinAppWidget(provider, null, null);
+                    Intent pinnedIntent = new Intent(this, DictionaryWidgetProvider.class);
+                    pinnedIntent.setAction(DictionaryWidgetProvider.ACTION_WIDGET_PINNED);
+                    PendingIntent successCallback = PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            pinnedIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+                    appWidgetManager.requestPinAppWidget(provider, null, successCallback);
                 }
             }
         }
