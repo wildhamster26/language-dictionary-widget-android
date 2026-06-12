@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 public class DictionaryWidgetProvider extends AppWidgetProvider {
     public static final String EXTRA_WORD_ID = "com.joinrestartabroad.glancedict.EXTRA_WORD_ID";
     public static final String EXTRA_CATEGORY_ID = "com.joinrestartabroad.glancedict.EXTRA_CATEGORY_ID";
+    public static final String EXTRA_COPY_TARGET = "com.joinrestartabroad.glancedict.EXTRA_COPY_TARGET";
     public static final String ACTION_WIDGET_PINNED = "com.joinrestartabroad.glancedict.ACTION_WIDGET_PINNED";
     public static final String ACTION_CLOSE_SETTINGS = "com.joinrestartabroad.glancedict.ACTION_CLOSE_SETTINGS";
 

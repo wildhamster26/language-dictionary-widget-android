@@ -107,6 +107,11 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, word.wordId);
             views.setOnClickFillInIntent(CELL_IDS[index], fillInIntent);
+
+            Intent copyIntent = new Intent();
+            copyIntent.putExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, word.wordId);
+            copyIntent.putExtra(DictionaryWidgetProvider.EXTRA_COPY_TARGET, true);
+            views.setOnClickFillInIntent(TRANSLATION_IDS[index], copyIntent);
         }
         return views;
     }

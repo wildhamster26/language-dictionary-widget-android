@@ -1,6 +1,8 @@
 package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,8 +39,6 @@ public class QuickActionActivity extends Activity {
             return;
         }
 
-        setContentView(R.layout.activity_quick_action);
-
         wordId = getIntent().getLongExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, -1L);
         db = new DictionaryDbHelper(this);
         word = db.getWord(wordId);
@@ -47,6 +47,14 @@ public class QuickActionActivity extends Activity {
             return;
         }
 
+        if (getIntent().getBooleanExtra(DictionaryWidgetProvider.EXTRA_COPY_TARGET, false)) {
+            copyTranslatedWord(word.translatedWord);
+            finish();
+            return;
+        }
+
+        setContentView(R.layout.activity_quick_action);
+
         categorySpinner = findViewById(R.id.category_spinner);
         nativeInput = findViewById(R.id.native_input);
         translationInput = findViewById(R.id.translation_input);
@@ -54,6 +62,10 @@ public class QuickActionActivity extends Activity {
         bindCategories();
         nativeInput.setText(word.nativeWord);
         translationInput.setText(word.translatedWord);
+        translationInput.setOnLongClickListener(v -> {
+            copyTranslatedWord(translationInput.getText().toString().trim());
+            return false;
+        });
 
         View save = findViewById(R.id.save_word);
         View delete = findViewById(R.id.delete_word);
@@ -124,5 +136,21 @@ public class QuickActionActivity extends Activity {
                 }
             });
         });
+    }
+
+    private void copyTranslatedWord(String translatedWord) {
+        if (translatedWord == null || translatedWord.trim().isEmpty()) {
+            return;
+        }
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (clipboard == null) {
+            return;
+        }
+
+        clipboard.setPrimaryClip(ClipData.newPlainText(
+                getString(R.string.clipboard_label_target_word),
+                translatedWord));
+        Toast.makeText(this, R.string.toast_copied_target_word, Toast.LENGTH_SHORT).show();
     }
 }
