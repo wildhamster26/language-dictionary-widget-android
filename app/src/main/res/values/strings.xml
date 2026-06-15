@@ -34,8 +34,11 @@
     <string name="hint_bulk_upload">word, translation\nword, translation</string>
     <string name="hint_new_category_name">New category name…</string>
 
+    <string name="tab_words">Words</string>
+    <string name="tab_categories">Categories</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
+    <string name="action_done">Done</string>
     <string name="action_delete">Delete</string>
     <string name="action_create">Create</string>
     <string name="clipboard_label_target_word">Target word</string>

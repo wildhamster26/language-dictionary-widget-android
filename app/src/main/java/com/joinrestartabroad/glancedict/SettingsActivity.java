@@ -12,17 +12,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,7 +25,6 @@ public class SettingsActivity extends Activity {
     private TextView fontValue;
     private TextView categoryFontValue;
     private TextView columnsValue;
-    private LinearLayout categoryChecks;
     private int fontSizeSp;
     private int categoryFontSizeSp;
     private int columnCount;
@@ -94,11 +87,6 @@ public class SettingsActivity extends Activity {
         columnsRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeColumnCount(-1));
         columnsRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeColumnCount(1));
 
-        // Categories Section Header
-        View categoriesHeader = findViewById(R.id.categories_header);
-        ((TextView) categoriesHeader.findViewById(R.id.section_title)).setText(R.string.settings_categories_section);
-
-        categoryChecks = findViewById(R.id.category_checks);
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
         categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(this);
         columnCount = DictionaryPrefs.getColumnCount(this);
@@ -112,7 +100,6 @@ public class SettingsActivity extends Activity {
         findViewById(R.id.privacy_policy).setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url)))));
         save.setOnClickListener(v -> {
-            saveActiveCategories();
             save.setEnabled(false);
             executor.execute(() -> {
                 db.refreshLongestTextCache(getApplicationContext());
@@ -129,7 +116,6 @@ public class SettingsActivity extends Activity {
         updateFontValue();
         updateCategoryFontValue();
         updateColumnsValue();
-        bindCategoryChecks();
     }
 
     private void finishConfiguration() {
@@ -208,41 +194,6 @@ public class SettingsActivity extends Activity {
 
     private void updateColumnsValue() {
         columnsValue.setText(String.format(java.util.Locale.getDefault(), "%d", columnCount));
-    }
-
-    private void bindCategoryChecks() {
-        Set<Long> activeIds = DictionaryPrefs.getActiveCategoryIds(this);
-        List<Category> categories = db.getCategories();
-        categoryChecks.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        for (Category category : categories) {
-            View itemView = inflater.inflate(R.layout.component_category_select_item, categoryChecks, false);
-            
-            TextView nameView = itemView.findViewById(R.id.category_name);
-            CheckBox checkBox = itemView.findViewById(R.id.category_checkbox);
-
-            nameView.setText(category.name);
-            itemView.setTag(category.id);
-            checkBox.setChecked(activeIds == null || activeIds.contains(category.id));
-            
-            // Reusable row click to toggle checkbox
-            itemView.setOnClickListener(v -> checkBox.toggle());
-
-            categoryChecks.addView(itemView);
-        }
-    }
-
-    private void saveActiveCategories() {
-        Set<Long> activeIds = new HashSet<>();
-        for (int i = 0; i < categoryChecks.getChildCount(); i++) {
-            View itemView = categoryChecks.getChildAt(i);
-            CheckBox checkBox = itemView.findViewById(R.id.category_checkbox);
-            if (checkBox.isChecked()) {
-                activeIds.add((Long) itemView.getTag());
-            }
-        }
-        DictionaryPrefs.setActiveCategoryIds(this, activeIds);
     }
 
     private void checkAndRequestWidgetPinning() {

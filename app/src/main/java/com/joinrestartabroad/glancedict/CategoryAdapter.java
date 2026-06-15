@@ -4,13 +4,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
@@ -19,6 +22,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final List<Category> categories;
     private final OnCategoryActionListener listener;
     private final DragStartListener dragStartListener;
+    private final Set<Long> activeCategoryIds;
 
     public interface OnCategoryActionListener {
         void onCreateCategory(String name);
@@ -29,8 +33,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onDragStarted(RecyclerView.ViewHolder viewHolder);
     }
 
-    public CategoryAdapter(List<Category> categories, OnCategoryActionListener listener, DragStartListener dragStartListener) {
+    public CategoryAdapter(
+            List<Category> categories,
+            Set<Long> activeCategoryIds,
+            OnCategoryActionListener listener,
+            DragStartListener dragStartListener) {
         this.categories = categories;
+        this.activeCategoryIds = activeCategoryIds == null ? allCategoryIds(categories) : new HashSet<>(activeCategoryIds);
         this.listener = listener;
         this.dragStartListener = dragStartListener;
     }
@@ -70,6 +79,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Category category = categories.get(position - 1);
             h.nameView.setText(category.name);
             h.wordCountView.setText(h.itemView.getContext().getString(R.string.word_count_format, category.wordCount));
+            h.activeCheckbox.setOnCheckedChangeListener(null);
+            h.activeCheckbox.setChecked(activeCategoryIds.contains(category.id));
+            h.activeCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    activeCategoryIds.add(category.id);
+                } else {
+                    activeCategoryIds.remove(category.id);
+                }
+            });
 
             // Reorder handle logic
             h.reorderHandle.setOnTouchListener((v, event) -> {
@@ -115,6 +133,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return categories;
     }
 
+    public Set<Long> getActiveCategoryIds() {
+        return new HashSet<>(activeCategoryIds);
+    }
+
+    private static Set<Long> allCategoryIds(List<Category> categories) {
+        Set<Long> ids = new HashSet<>();
+        for (Category category : categories) {
+            ids.add(category.id);
+        }
+        return ids;
+    }
+
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
         EditText nameInput;
         View createButton;
@@ -129,6 +159,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView nameView;
         TextView wordCountView;
+        CheckBox activeCheckbox;
         View deleteButton;
         View reorderHandle;
 
@@ -136,6 +167,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             nameView = itemView.findViewById(R.id.category_name);
             wordCountView = itemView.findViewById(R.id.word_count);
+            activeCheckbox = itemView.findViewById(R.id.category_active_checkbox);
             deleteButton = itemView.findViewById(R.id.delete_category);
             reorderHandle = itemView.findViewById(R.id.reorder_handle);
         }

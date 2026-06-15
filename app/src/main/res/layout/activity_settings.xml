@@ -70,17 +70,6 @@
                 android:id="@+id/columns_row"
                 layout="@layout/component_settings_control" />
 
-            <!-- Active Categories Section -->
-            <include
-                android:id="@+id/categories_header"
-                layout="@layout/component_section_header" />
-
-            <LinearLayout
-                android:id="@+id/category_checks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
         </LinearLayout>
     </ScrollView>
 

@@ -9,11 +9,6 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".CategoryManagerActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/DialogOverlayTheme" />
-
-        <activity
             android:name=".QuickActionActivity"
             android:excludeFromRecents="true"
             android:theme="@style/DialogOverlayTheme" />

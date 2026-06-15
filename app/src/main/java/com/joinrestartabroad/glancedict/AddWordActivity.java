@@ -1,7 +1,7 @@
 package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,18 +11,35 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AddWordActivity extends Activity {
+public class AddWordActivity extends Activity implements CategoryAdapter.OnCategoryActionListener {
     private DictionaryDbHelper db;
     private Spinner categorySpinner;
     private EditText nativeInput;
     private EditText translationInput;
     private EditText bulkInput;
-    private View save;
+    private TextView saveButton;
+    private View panelWords;
+    private RecyclerView categoryRecycler;
+    private TextView tabWords;
+    private TextView tabCategories;
+    private View tabWordsIndicator;
+    private View tabCategoriesIndicator;
+    private CategoryAdapter categoryAdapter;
+    private ItemTouchHelper itemTouchHelper;
+    private boolean onWordsTab = true;
+
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean destroyed;
@@ -37,22 +54,31 @@ public class AddWordActivity extends Activity {
         nativeInput = findViewById(R.id.native_input);
         translationInput = findViewById(R.id.translation_input);
         bulkInput = findViewById(R.id.bulk_input);
+        saveButton = findViewById(R.id.save_word);
+        panelWords = findViewById(R.id.panel_words);
+        categoryRecycler = findViewById(R.id.panel_categories);
+        tabWords = findViewById(R.id.tab_words);
+        tabCategories = findViewById(R.id.tab_categories);
+        tabWordsIndicator = findViewById(R.id.tab_words_indicator);
+        tabCategoriesIndicator = findViewById(R.id.tab_categories_indicator);
 
-        save = findViewById(R.id.save_word);
-        TextView manageCategories = findViewById(R.id.manage_categories);
-        View cancel = findViewById(R.id.add_word_cancel);
-        View topCancel = findViewById(R.id.add_word_top_cancel);
-        
-        save.setOnClickListener(v -> saveWords());
-        manageCategories.setOnClickListener(v -> startActivity(new Intent(this, CategoryManagerActivity.class)));
-        cancel.setOnClickListener(v -> finish());
-        topCancel.setOnClickListener(v -> finish());
+        tabWords.setOnClickListener(v -> switchTab(true));
+        tabCategories.setOnClickListener(v -> switchTab(false));
+        saveButton.setOnClickListener(v -> {
+            if (onWordsTab) saveWords();
+            else saveCategoryOrder();
+        });
+        findViewById(R.id.add_word_cancel).setOnClickListener(v -> finish());
+        findViewById(R.id.add_word_top_cancel).setOnClickListener(v -> finish());
+
+        categoryRecycler.setLayoutManager(new LinearLayoutManager(this));
+        refreshCategoryAdapter();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bindCategories();
+        bindSpinnerCategories();
     }
 
     @Override
@@ -60,12 +86,21 @@ public class AddWordActivity extends Activity {
         super.onDestroy();
         destroyed = true;
         executor.shutdownNow();
-        if (db != null) {
-            db.close();
-        }
+        if (db != null) db.close();
     }
 
-    private void bindCategories() {
+    private void switchTab(boolean wordsTab) {
+        onWordsTab = wordsTab;
+        panelWords.setVisibility(wordsTab ? View.VISIBLE : View.GONE);
+        categoryRecycler.setVisibility(wordsTab ? View.GONE : View.VISIBLE);
+        tabWords.setTextColor(getColor(wordsTab ? R.color.button_create_bg : R.color.text_hint));
+        tabCategories.setTextColor(getColor(wordsTab ? R.color.text_hint : R.color.button_create_bg));
+        tabWordsIndicator.setVisibility(wordsTab ? View.VISIBLE : View.INVISIBLE);
+        tabCategoriesIndicator.setVisibility(wordsTab ? View.INVISIBLE : View.VISIBLE);
+        saveButton.setText(wordsTab ? R.string.action_save : R.string.action_done);
+    }
+
+    private void bindSpinnerCategories() {
         List<Category> categories = db.getCategories();
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                 this,
@@ -73,6 +108,99 @@ public class AddWordActivity extends Activity {
                 categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
+    }
+
+    private void refreshCategoryAdapter() {
+        refreshCategoryAdapter(categoryAdapter == null
+                ? DictionaryPrefs.getActiveCategoryIds(this)
+                : categoryAdapter.getActiveCategoryIds());
+    }
+
+    private void refreshCategoryAdapter(Set<Long> activeCategoryIds) {
+        List<Category> categories = db.getCategories();
+        categoryAdapter = new CategoryAdapter(categories, activeCategoryIds, this, viewHolder -> {
+            if (itemTouchHelper != null) itemTouchHelper.startDrag(viewHolder);
+        });
+        categoryRecycler.setAdapter(categoryAdapter);
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                if (target.getBindingAdapterPosition() == 0) return false;
+                categoryAdapter.onItemMove(vh.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
+
+            @Override
+            public int getDragDirs(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh) {
+                if (vh.getItemViewType() == 0) return 0;
+                return super.getDragDirs(rv, vh);
+            }
+        };
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(categoryRecycler);
+    }
+
+    @Override
+    public void onCreateCategory(String name) {
+        long id = db.createCategory(name);
+        if (id <= 0) {
+            Toast.makeText(this, "Category already exists or error.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Set<Long> activeIds = currentActiveCategoryIds();
+        activeIds.add(id);
+        db.refreshLongestTextCache(this);
+        refreshCategoryAdapter(activeIds);
+        bindSpinnerCategories();
+        WidgetRefresh.refreshAll(this);
+    }
+
+    @Override
+    public void onDeleteCategory(Category category) {
+        int wordCount = db.getWordCountForCategory(category.id);
+        String message = wordCount == 0
+                ? "This category is empty."
+                : "All " + wordCount + " words in this category will be permanently deleted.";
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle("Delete \"" + category.name + "\"?")
+                .setMessage(message)
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    Set<Long> activeIds = currentActiveCategoryIds();
+                    activeIds.remove(category.id);
+                    db.deleteCategoryAndWords(category.id);
+                    db.refreshLongestTextCache(this);
+                    refreshCategoryAdapter(activeIds);
+                    bindSpinnerCategories();
+                    WidgetRefresh.refreshAll(this);
+                })
+                .show();
+    }
+
+    private void saveCategoryOrder() {
+        List<Category> currentList = categoryAdapter.getCategories();
+        List<Long> ids = new ArrayList<>();
+        for (Category c : currentList) ids.add(c.id);
+        db.updateCategoryOrder(ids);
+        DictionaryPrefs.setActiveCategoryIds(this, categoryAdapter.getActiveCategoryIds());
+        db.refreshLongestTextCache(this);
+        WidgetRefresh.refreshAll(this);
+        bindSpinnerCategories();
+        finish();
+    }
+
+    private Set<Long> currentActiveCategoryIds() {
+        if (categoryAdapter != null) {
+            return categoryAdapter.getActiveCategoryIds();
+        }
+        Set<Long> storedIds = DictionaryPrefs.getActiveCategoryIds(this);
+        return storedIds == null ? new HashSet<>() : storedIds;
     }
 
     private void saveWords() {
@@ -92,7 +220,7 @@ public class AddWordActivity extends Activity {
         }
 
         long categoryId = category.id;
-        save.setEnabled(false);
+        saveButton.setEnabled(false);
 
         executor.execute(() -> {
             int saved = 0;
@@ -128,11 +256,9 @@ public class AddWordActivity extends Activity {
     }
 
     private void onSaveComplete(int saved, RuntimeException failure) {
-        if (destroyed) {
-            return;
-        }
+        if (destroyed) return;
 
-        save.setEnabled(true);
+        saveButton.setEnabled(true);
         if (failure != null) {
             Toast.makeText(this, "Could not save words.", Toast.LENGTH_SHORT).show();
             return;
