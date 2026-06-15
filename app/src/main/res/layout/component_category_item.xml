@@ -59,7 +59,6 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/bg_secondary_button"
         android:contentDescription="@string/action_delete"
         android:padding="10dp"
         android:src="@drawable/ic_delete"
