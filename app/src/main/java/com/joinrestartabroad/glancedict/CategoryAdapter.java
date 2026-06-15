@@ -98,10 +98,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return false;
             });
 
-            // Delete logic (hide for Uncategorized)
+            // Delete logic (hide for the default category)
             if (Objects.equals(category.name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
                 h.deleteButton.setVisibility(View.GONE);
-                h.reorderHandle.setVisibility(View.INVISIBLE); // Lock Uncategorized
+                h.reorderHandle.setVisibility(View.INVISIBLE);
             } else {
                 h.deleteButton.setVisibility(View.VISIBLE);
                 h.reorderHandle.setVisibility(View.VISIBLE);
@@ -119,7 +119,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         // Prevent moving header or moving items into header position
         if (fromPosition == 0 || toPosition == 0) return;
         
-        // Prevent moving "Uncategorized" (usually first item at pos 1)
+        // Prevent moving the default category, usually first item at pos 1.
         if (Objects.equals(categories.get(fromPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY) ||
             Objects.equals(categories.get(toPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
             return;

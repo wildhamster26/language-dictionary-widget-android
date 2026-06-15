@@ -97,7 +97,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         tabCategories.setTextColor(getColor(wordsTab ? R.color.text_hint : R.color.button_create_bg));
         tabWordsIndicator.setVisibility(wordsTab ? View.VISIBLE : View.INVISIBLE);
         tabCategoriesIndicator.setVisibility(wordsTab ? View.INVISIBLE : View.VISIBLE);
-        saveButton.setText(wordsTab ? R.string.action_save : R.string.action_done);
+        saveButton.setText(R.string.action_save);
     }
 
     private void bindSpinnerCategories() {

@@ -17,11 +17,12 @@ import java.util.Set;
 
 public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "dictionary.db";
-    public static final int DATABASE_VERSION = 2;
-    public static final String DEFAULT_CATEGORY = "Uncategorized";
+    public static final int DATABASE_VERSION = 3;
+    public static final String DEFAULT_CATEGORY = "General";
 
     private static final String TABLE_CATEGORIES = "categories";
     private static final String TABLE_WORDS = "words";
+    private static final String LEGACY_DEFAULT_CATEGORY = "Uncategorized";
 
     private final Context mContext;
 
@@ -96,6 +97,9 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE categories ADD COLUMN display_order INTEGER DEFAULT 0");
+        }
+        if (oldVersion < 3) {
+            migrateDefaultCategoryName(db);
         }
     }
 
@@ -393,5 +397,40 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private String normalize(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private void migrateDefaultCategoryName(SQLiteDatabase db) {
+        Long legacyId = findCategoryId(db, LEGACY_DEFAULT_CATEGORY);
+        if (legacyId == null) {
+            return;
+        }
+
+        Long generalId = findCategoryId(db, DEFAULT_CATEGORY);
+        if (generalId == null) {
+            ContentValues values = new ContentValues();
+            values.put("name", DEFAULT_CATEGORY);
+            db.update(TABLE_CATEGORIES, values, "id = ?", new String[]{String.valueOf(legacyId)});
+            return;
+        }
+
+        if (!generalId.equals(legacyId)) {
+            ContentValues wordValues = new ContentValues();
+            wordValues.put("category_id", generalId);
+            db.update(TABLE_WORDS, wordValues, "category_id = ?", new String[]{String.valueOf(legacyId)});
+            db.delete(TABLE_CATEGORIES, "id = ?", new String[]{String.valueOf(legacyId)});
+        }
+    }
+
+    private Long findCategoryId(SQLiteDatabase db, String name) {
+        try (Cursor cursor = db.query(
+                TABLE_CATEGORIES,
+                new String[]{"id"},
+                "name = ? COLLATE NOCASE",
+                new String[]{normalize(name)},
+                null,
+                null,
+                null)) {
+            return cursor.moveToFirst() ? cursor.getLong(0) : null;
+        }
     }
 }
