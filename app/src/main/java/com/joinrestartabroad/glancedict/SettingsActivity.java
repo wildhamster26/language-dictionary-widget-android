@@ -308,6 +308,7 @@ public class SettingsActivity extends Activity {
         String source = DictionaryPrefs.getSourceLanguage(this);
         String target = DictionaryPrefs.getTargetLanguage(this);
         if (source == null || target == null) return;
+        if (source.equals(target)) return;
 
         downloadProgressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
                 .setMessage(R.string.dialog_downloading_model)
@@ -322,35 +323,47 @@ public class SettingsActivity extends Activity {
                     .setTargetLanguage(target)
                     .build();
         } catch (IllegalArgumentException e) {
-            downloadProgressDialog.dismiss();
-            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                    .setTitle(R.string.dialog_download_failed_title)
-                    .setMessage(R.string.dialog_download_failed_message)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
+            showDownloadFailedDialog();
             return;
         }
 
-        Translator t = Translation.getClient(options);
-        t.downloadModelIfNeeded()
-                .addOnSuccessListener(unused -> {
-                    t.close();
-                    if (!destroyed) {
-                        downloadProgressDialog.dismiss();
-                        Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    t.close();
-                    if (!destroyed) {
-                        downloadProgressDialog.dismiss();
-                        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                                .setTitle(R.string.dialog_download_failed_title)
-                                .setMessage(R.string.dialog_download_failed_message)
-                                .setPositiveButton(android.R.string.ok, null)
-                                .show();
-                    }
-                });
+        final Translator translator;
+        try {
+            translator = Translation.getClient(options);
+        } catch (RuntimeException e) {
+            showDownloadFailedDialog();
+            return;
+        }
+
+        try {
+            translator.downloadModelIfNeeded()
+                    .addOnSuccessListener(unused -> {
+                        translator.close();
+                        if (!destroyed) {
+                            downloadProgressDialog.dismiss();
+                            Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        translator.close();
+                        showDownloadFailedDialog();
+                    });
+        } catch (RuntimeException e) {
+            translator.close();
+            showDownloadFailedDialog();
+        }
+    }
+
+    private void showDownloadFailedDialog() {
+        if (destroyed) return;
+        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
+            downloadProgressDialog.dismiss();
+        }
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle(R.string.dialog_download_failed_title)
+                .setMessage(R.string.dialog_download_failed_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     private List<LanguageItem> buildLanguageList() {

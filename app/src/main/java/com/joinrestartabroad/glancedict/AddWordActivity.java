@@ -129,6 +129,10 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         String source = DictionaryPrefs.getSourceLanguage(this);
         String target = DictionaryPrefs.getTargetLanguage(this);
         if (target == null) return;
+        if (target.equals(source)) {
+            translationInput.setText(nativeWord);
+            return;
+        }
 
         translateButton.setEnabled(false);
         translateButton.setAlpha(0.4f);
@@ -136,6 +140,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
 
         if (activeTranslator != null) {
             activeTranslator.close();
+            activeTranslator = null;
         }
         TranslatorOptions options;
         try {
@@ -149,22 +154,41 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
             Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
             return;
         }
-        activeTranslator = Translation.getClient(options);
-        activeTranslator.translate(nativeWord)
-                .addOnSuccessListener(result -> {
-                    if (!destroyed) {
-                        translationInput.setText(result);
-                        translateButton.setText(R.string.action_translate);
-                        updateTranslateButton();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (!destroyed) {
-                        translateButton.setText(R.string.action_translate);
-                        updateTranslateButton();
-                        Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        final Translator translator;
+        try {
+            translator = Translation.getClient(options);
+            activeTranslator = translator;
+        } catch (RuntimeException e) {
+            resetTranslateButton();
+            Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            activeTranslator.translate(nativeWord)
+                    .addOnSuccessListener(result -> {
+                        if (!destroyed) {
+                            translationInput.setText(result);
+                            resetTranslateButton();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        if (!destroyed) {
+                            resetTranslateButton();
+                            Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } catch (RuntimeException e) {
+            translator.close();
+            activeTranslator = null;
+            resetTranslateButton();
+            Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void resetTranslateButton() {
+        translateButton.setText(R.string.action_translate);
+        updateTranslateButton();
     }
 
     private void switchTab(boolean wordsTab) {
