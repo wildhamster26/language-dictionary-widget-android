@@ -125,8 +125,12 @@ public final class DictionaryPrefs {
     }
 
     public static String getSourceLanguage(Context context) {
-        return prefs(context).getString(KEY_SOURCE_LANGUAGE,
-                java.util.Locale.getDefault().getLanguage());
+        // toLanguageTag() returns modern BCP-47 codes (e.g. "he", "id") rather than
+        // the legacy Java codes getLanguage() returns ("iw", "in"), which ML Kit rejects.
+        String tag = java.util.Locale.getDefault().toLanguageTag();
+        int hyphen = tag.indexOf('-');
+        String defaultLang = hyphen > 0 ? tag.substring(0, hyphen) : tag;
+        return prefs(context).getString(KEY_SOURCE_LANGUAGE, defaultLang);
     }
 
     public static void setSourceLanguage(Context context, String bcp47Code) {

@@ -315,10 +315,22 @@ public class SettingsActivity extends Activity {
                 .create();
         downloadProgressDialog.show();
 
-        TranslatorOptions options = new TranslatorOptions.Builder()
-                .setSourceLanguage(source)
-                .setTargetLanguage(target)
-                .build();
+        TranslatorOptions options;
+        try {
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(source)
+                    .setTargetLanguage(target)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            downloadProgressDialog.dismiss();
+            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                    .setTitle(R.string.dialog_download_failed_title)
+                    .setMessage(R.string.dialog_download_failed_message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+            return;
+        }
+
         Translator t = Translation.getClient(options);
         t.downloadModelIfNeeded()
                 .addOnSuccessListener(unused -> {

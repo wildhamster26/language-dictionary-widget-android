@@ -137,10 +137,18 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         if (activeTranslator != null) {
             activeTranslator.close();
         }
-        TranslatorOptions options = new TranslatorOptions.Builder()
-                .setSourceLanguage(source)
-                .setTargetLanguage(target)
-                .build();
+        TranslatorOptions options;
+        try {
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(source)
+                    .setTargetLanguage(target)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            translateButton.setText(R.string.action_translate);
+            updateTranslateButton();
+            Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
         activeTranslator = Translation.getClient(options);
         activeTranslator.translate(nativeWord)
                 .addOnSuccessListener(result -> {
