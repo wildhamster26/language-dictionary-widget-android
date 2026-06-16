@@ -24,6 +24,7 @@ public final class DictionaryPrefs {
     private static final String KEY_ACTIVE_CATEGORY_IDS = "active_categories";
     private static final String KEY_LONGEST_TEXT_CACHE = "longest_text_cache";
     private static final String KEY_COLLAPSED_CATEGORY_IDS = "collapsed_categories";
+    private static final String KEY_SORT_BY_LENGTH = "sort_by_length";
 
     private DictionaryPrefs() {
     }
@@ -104,6 +105,14 @@ public final class DictionaryPrefs {
             stored.add(String.valueOf(id));
         }
         prefs(context).edit().putStringSet(KEY_COLLAPSED_CATEGORY_IDS, stored).apply();
+    }
+
+    public static boolean isSortByLength(Context context) {
+        return prefs(context).getBoolean(KEY_SORT_BY_LENGTH, false);
+    }
+
+    public static void setSortByLength(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(KEY_SORT_BY_LENGTH, enabled).apply();
     }
 
     public static void setLongestTextCache(Context context, String value) {

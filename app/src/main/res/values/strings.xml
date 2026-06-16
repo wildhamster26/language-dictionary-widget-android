@@ -16,6 +16,10 @@
     <string name="settings_category_font_size_sub">Size of category header labels</string>
     <string name="settings_columns">Columns</string>
     <string name="settings_columns_sub">Grid layout density</string>
+    <string name="settings_sort_by_length">Sort Words by Length</string>
+    <string name="settings_sort_by_length_sub">Reorders words within each category to reduce wasted row space</string>
+    <string name="toggle_on">ON</string>
+    <string name="toggle_off">OFF</string>
     <string name="settings_categories_section">Displayed Categories</string>
     <string name="font_size_format">%1$dsp</string>
 

@@ -20,6 +20,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private int categoryFontSizeSp = DictionaryPrefs.DEFAULT_CATEGORY_FONT_SP;
     private int columnCount = DictionaryPrefs.DEFAULT_COLUMN_COUNT;
     private Set<Long> collapsedCategoryIds = new HashSet<>();
+    private boolean sortByLength = false;
 
     private static final int[] CELL_IDS = new int[]{
             R.id.word_cell_1,
@@ -146,6 +147,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(context);
         columnCount = DictionaryPrefs.getColumnCount(context);
         collapsedCategoryIds = DictionaryPrefs.getCollapsedCategoryIds(context);
+        sortByLength = DictionaryPrefs.isSortByLength(context);
         rows = buildRows(db.getWidgetItems(DictionaryPrefs.getActiveCategoryIds(context)));
     }
 
@@ -169,6 +171,17 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private void flushWordRows(List<WidgetRow> result, List<WidgetItem> pendingWords) {
         if (pendingWords.isEmpty()) {
             return;
+        }
+
+        if (sortByLength) {
+            Collections.sort(pendingWords, new java.util.Comparator<WidgetItem>() {
+                @Override
+                public int compare(WidgetItem a, WidgetItem b) {
+                    int lenA = a.primary.length() + a.secondary.length();
+                    int lenB = b.primary.length() + b.secondary.length();
+                    return Integer.compare(lenA, lenB);
+                }
+            });
         }
 
         for (int start = 0; start < pendingWords.size(); start += columnCount) {

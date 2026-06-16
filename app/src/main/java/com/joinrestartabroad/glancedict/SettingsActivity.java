@@ -25,6 +25,7 @@ public class SettingsActivity extends Activity {
     private TextView fontValue;
     private TextView categoryFontValue;
     private TextView columnsValue;
+    private TextView sortByLengthButton;
     private int fontSizeSp;
     private int categoryFontSizeSp;
     private int columnCount;
@@ -87,6 +88,13 @@ public class SettingsActivity extends Activity {
         columnsRow.findViewById(R.id.control_decrement).setOnClickListener(v -> changeColumnCount(-1));
         columnsRow.findViewById(R.id.control_increment).setOnClickListener(v -> changeColumnCount(1));
 
+        // Sort by Length Toggle
+        View sortByLengthRow = findViewById(R.id.sort_by_length_row);
+        ((TextView) sortByLengthRow.findViewById(R.id.toggle_label)).setText(R.string.settings_sort_by_length);
+        ((TextView) sortByLengthRow.findViewById(R.id.toggle_sublabel)).setText(R.string.settings_sort_by_length_sub);
+        sortByLengthButton = sortByLengthRow.findViewById(R.id.toggle_button);
+        sortByLengthButton.setOnClickListener(v -> toggleSortByLength());
+
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
         categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(this);
         columnCount = DictionaryPrefs.getColumnCount(this);
@@ -116,6 +124,7 @@ public class SettingsActivity extends Activity {
         updateFontValue();
         updateCategoryFontValue();
         updateColumnsValue();
+        updateSortByLengthButton();
     }
 
     private void finishConfiguration() {
@@ -194,6 +203,19 @@ public class SettingsActivity extends Activity {
 
     private void updateColumnsValue() {
         columnsValue.setText(String.format(java.util.Locale.getDefault(), "%d", columnCount));
+    }
+
+    private void toggleSortByLength() {
+        boolean next = !DictionaryPrefs.isSortByLength(this);
+        DictionaryPrefs.setSortByLength(this, next);
+        updateSortByLengthButton();
+        WidgetRefresh.refreshAll(this);
+    }
+
+    private void updateSortByLengthButton() {
+        boolean on = DictionaryPrefs.isSortByLength(this);
+        sortByLengthButton.setText(on ? R.string.toggle_on : R.string.toggle_off);
+        sortByLengthButton.setTextColor(getColor(on ? R.color.secondary : R.color.text_hint));
     }
 
     private void checkAndRequestWidgetPinning() {
