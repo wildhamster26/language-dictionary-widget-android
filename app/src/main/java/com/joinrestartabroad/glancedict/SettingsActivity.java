@@ -1,6 +1,7 @@
 package com.joinrestartabroad.glancedict;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -14,9 +15,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,6 +37,9 @@ public class SettingsActivity extends Activity {
     private TextView categoryFontValue;
     private TextView columnsValue;
     private TextView sortByLengthButton;
+    private TextView sourceLanguageValue;
+    private TextView targetLanguageValue;
+    private AlertDialog downloadProgressDialog;
     private int fontSizeSp;
     private int categoryFontSizeSp;
     private int columnCount;
@@ -121,10 +135,27 @@ public class SettingsActivity extends Activity {
             });
         });
 
+        // Translation Section
+        View translationHeader = findViewById(R.id.translation_header);
+        ((TextView) translationHeader.findViewById(R.id.section_title)).setText(R.string.settings_translation_section);
+
+        View sourceLanguageRow = findViewById(R.id.source_language_row);
+        ((TextView) sourceLanguageRow.findViewById(R.id.language_label)).setText(R.string.settings_my_language);
+        ((TextView) sourceLanguageRow.findViewById(R.id.language_sublabel)).setText(R.string.settings_my_language_sub);
+        sourceLanguageValue = sourceLanguageRow.findViewById(R.id.language_value);
+        sourceLanguageRow.setOnClickListener(v -> showLanguagePickerDialog(true));
+
+        View targetLanguageRow = findViewById(R.id.target_language_row);
+        ((TextView) targetLanguageRow.findViewById(R.id.language_label)).setText(R.string.settings_translate_to);
+        ((TextView) targetLanguageRow.findViewById(R.id.language_sublabel)).setText(R.string.settings_translate_to_sub);
+        targetLanguageValue = targetLanguageRow.findViewById(R.id.language_value);
+        targetLanguageRow.setOnClickListener(v -> showLanguagePickerDialog(false));
+
         updateFontValue();
         updateCategoryFontValue();
         updateColumnsValue();
         updateSortByLengthButton();
+        updateLanguageValues();
     }
 
     private void finishConfiguration() {
@@ -163,6 +194,9 @@ public class SettingsActivity extends Activity {
         executor.shutdownNow();
         if (db != null) {
             db.close();
+        }
+        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
+            downloadProgressDialog.dismiss();
         }
     }
 
@@ -216,6 +250,115 @@ public class SettingsActivity extends Activity {
         boolean on = DictionaryPrefs.isSortByLength(this);
         sortByLengthButton.setText(on ? R.string.toggle_on : R.string.toggle_off);
         sortByLengthButton.setTextColor(getColor(on ? R.color.secondary : R.color.text_hint));
+    }
+
+    private void updateLanguageValues() {
+        String source = DictionaryPrefs.getSourceLanguage(this);
+        sourceLanguageValue.setText(new Locale(source).getDisplayLanguage(Locale.getDefault()));
+        sourceLanguageValue.setTextColor(getColor(R.color.word_native));
+
+        String target = DictionaryPrefs.getTargetLanguage(this);
+        if (target != null) {
+            targetLanguageValue.setText(new Locale(target).getDisplayLanguage(Locale.getDefault()));
+            targetLanguageValue.setTextColor(getColor(R.color.word_native));
+        } else {
+            targetLanguageValue.setText(R.string.hint_tap_to_select);
+            targetLanguageValue.setTextColor(getColor(R.color.text_hint));
+        }
+    }
+
+    private void showLanguagePickerDialog(boolean isSource) {
+        List<LanguageItem> languages = buildLanguageList();
+        String[] names = new String[languages.size()];
+        for (int i = 0; i < languages.size(); i++) {
+            names[i] = languages.get(i).displayName;
+        }
+
+        String current = isSource
+                ? DictionaryPrefs.getSourceLanguage(this)
+                : DictionaryPrefs.getTargetLanguage(this);
+        int checkedItem = -1;
+        if (current != null) {
+            for (int i = 0; i < languages.size(); i++) {
+                if (languages.get(i).code.equals(current)) {
+                    checkedItem = i;
+                    break;
+                }
+            }
+        }
+
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle(isSource ? R.string.settings_my_language : R.string.settings_translate_to)
+                .setSingleChoiceItems(names, checkedItem, (dialog, which) -> {
+                    String selected = languages.get(which).code;
+                    if (isSource) {
+                        DictionaryPrefs.setSourceLanguage(this, selected);
+                    } else {
+                        DictionaryPrefs.setTargetLanguage(this, selected);
+                    }
+                    updateLanguageValues();
+                    dialog.dismiss();
+                    downloadModelsIfBothSet();
+                })
+                .setNegativeButton(R.string.action_cancel, null)
+                .show();
+    }
+
+    private void downloadModelsIfBothSet() {
+        String source = DictionaryPrefs.getSourceLanguage(this);
+        String target = DictionaryPrefs.getTargetLanguage(this);
+        if (source == null || target == null) return;
+
+        downloadProgressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setMessage(R.string.dialog_downloading_model)
+                .setCancelable(false)
+                .create();
+        downloadProgressDialog.show();
+
+        TranslatorOptions options = new TranslatorOptions.Builder()
+                .setSourceLanguage(source)
+                .setTargetLanguage(target)
+                .build();
+        Translator t = Translation.getClient(options);
+        t.downloadModelIfNeeded()
+                .addOnSuccessListener(unused -> {
+                    t.close();
+                    if (!destroyed) {
+                        downloadProgressDialog.dismiss();
+                        Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    t.close();
+                    if (!destroyed) {
+                        downloadProgressDialog.dismiss();
+                        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                                .setTitle(R.string.dialog_download_failed_title)
+                                .setMessage(R.string.dialog_download_failed_message)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show();
+                    }
+                });
+    }
+
+    private List<LanguageItem> buildLanguageList() {
+        List<LanguageItem> list = new ArrayList<>();
+        for (String code : TranslateLanguage.getAllLanguages()) {
+            String display = new Locale(code).getDisplayLanguage(Locale.getDefault());
+            list.add(new LanguageItem(code, display));
+        }
+        Collections.sort(list, (a, b) -> a.displayName.compareTo(b.displayName));
+        return list;
+    }
+
+    private static final class LanguageItem {
+        final String code;
+        final String displayName;
+
+        LanguageItem(String code, String displayName) {
+            this.code = code;
+            this.displayName = displayName;
+        }
     }
 
     private void checkAndRequestWidgetPinning() {

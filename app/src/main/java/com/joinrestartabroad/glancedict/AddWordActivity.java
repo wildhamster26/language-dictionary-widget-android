@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,6 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,6 +43,9 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
     private View tabWordsIndicator;
     private View tabCategoriesIndicator;
     private CategoryAdapter categoryAdapter;
+    private TextView translateButton;
+    private TextView translateHint;
+    private Translator activeTranslator;
     private ItemTouchHelper itemTouchHelper;
     private boolean onWordsTab = true;
 
@@ -62,6 +71,15 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         tabWordsIndicator = findViewById(R.id.tab_words_indicator);
         tabCategoriesIndicator = findViewById(R.id.tab_categories_indicator);
 
+        translateButton = findViewById(R.id.translate_button);
+        translateHint = findViewById(R.id.translate_hint);
+        translateButton.setOnClickListener(v -> fetchTranslation());
+        nativeInput.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(Editable s) { updateTranslateButton(); }
+        });
+
         tabWords.setOnClickListener(v -> switchTab(true));
         tabCategories.setOnClickListener(v -> switchTab(false));
         saveButton.setOnClickListener(v -> {
@@ -73,12 +91,14 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
 
         categoryRecycler.setLayoutManager(new LinearLayoutManager(this));
         refreshCategoryAdapter();
+        updateTranslateButton();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         bindSpinnerCategories();
+        updateTranslateButton();
     }
 
     @Override
@@ -87,6 +107,56 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         destroyed = true;
         executor.shutdownNow();
         if (db != null) db.close();
+        if (activeTranslator != null) {
+            activeTranslator.close();
+            activeTranslator = null;
+        }
+    }
+
+    private void updateTranslateButton() {
+        boolean hasTarget = DictionaryPrefs.getTargetLanguage(this) != null;
+        boolean hasText = nativeInput.getText().length() > 0;
+        boolean enabled = hasTarget && hasText;
+        translateButton.setEnabled(enabled);
+        translateButton.setAlpha(enabled ? 1.0f : 0.4f);
+        translateHint.setVisibility(!hasTarget ? View.VISIBLE : View.GONE);
+    }
+
+    private void fetchTranslation() {
+        String nativeWord = nativeInput.getText().toString().trim();
+        if (nativeWord.isEmpty()) return;
+
+        String source = DictionaryPrefs.getSourceLanguage(this);
+        String target = DictionaryPrefs.getTargetLanguage(this);
+        if (target == null) return;
+
+        translateButton.setEnabled(false);
+        translateButton.setAlpha(0.4f);
+        translateButton.setText("…");
+
+        if (activeTranslator != null) {
+            activeTranslator.close();
+        }
+        TranslatorOptions options = new TranslatorOptions.Builder()
+                .setSourceLanguage(source)
+                .setTargetLanguage(target)
+                .build();
+        activeTranslator = Translation.getClient(options);
+        activeTranslator.translate(nativeWord)
+                .addOnSuccessListener(result -> {
+                    if (!destroyed) {
+                        translationInput.setText(result);
+                        translateButton.setText(R.string.action_translate);
+                        updateTranslateButton();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (!destroyed) {
+                        translateButton.setText(R.string.action_translate);
+                        updateTranslateButton();
+                        Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void switchTab(boolean wordsTab) {

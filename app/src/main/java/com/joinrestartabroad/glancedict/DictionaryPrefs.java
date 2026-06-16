@@ -25,6 +25,8 @@ public final class DictionaryPrefs {
     private static final String KEY_LONGEST_TEXT_CACHE = "longest_text_cache";
     private static final String KEY_COLLAPSED_CATEGORY_IDS = "collapsed_categories";
     private static final String KEY_SORT_BY_LENGTH = "sort_by_length";
+    private static final String KEY_SOURCE_LANGUAGE = "source_language";
+    private static final String KEY_TARGET_LANGUAGE = "target_language";
 
     private DictionaryPrefs() {
     }
@@ -120,6 +122,23 @@ public final class DictionaryPrefs {
                 ? DictionaryDbHelper.DEFAULT_CATEGORY
                 : value.trim();
         prefs(context).edit().putString(KEY_LONGEST_TEXT_CACHE, cached).apply();
+    }
+
+    public static String getSourceLanguage(Context context) {
+        return prefs(context).getString(KEY_SOURCE_LANGUAGE,
+                java.util.Locale.getDefault().getLanguage());
+    }
+
+    public static void setSourceLanguage(Context context, String bcp47Code) {
+        prefs(context).edit().putString(KEY_SOURCE_LANGUAGE, bcp47Code).apply();
+    }
+
+    public static String getTargetLanguage(Context context) {
+        return prefs(context).getString(KEY_TARGET_LANGUAGE, null);
+    }
+
+    public static void setTargetLanguage(Context context, String bcp47Code) {
+        prefs(context).edit().putString(KEY_TARGET_LANGUAGE, bcp47Code).apply();
     }
 
     private static SharedPreferences prefs(Context context) {

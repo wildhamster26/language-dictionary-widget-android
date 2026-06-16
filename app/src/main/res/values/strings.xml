@@ -53,4 +53,18 @@
     <string name="content_description_close">Close</string>
     <string name="content_description_back">Back</string>
     <string name="content_description_reorder">Reorder</string>
+
+    <string name="settings_translation_section">Translation</string>
+    <string name="settings_my_language">My language</string>
+    <string name="settings_my_language_sub">The language you enter words in</string>
+    <string name="settings_translate_to">Translate to</string>
+    <string name="settings_translate_to_sub">The language to translate into</string>
+    <string name="hint_tap_to_select">Tap to select</string>
+    <string name="dialog_downloading_model">Downloading language model…</string>
+    <string name="dialog_download_failed_title">Download failed</string>
+    <string name="dialog_download_failed_message">An internet connection is required to download the language model.</string>
+    <string name="toast_model_ready">Language model ready</string>
+    <string name="action_translate">Translate</string>
+    <string name="hint_set_target_language">Set a target language in Settings to enable translation</string>
+    <string name="toast_translation_failed">Translation failed</string>
 </resources>

@@ -163,19 +163,38 @@
                 android:layout_height="56dp"
                 android:background="@drawable/bg_input_field"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp">
 
                 <EditText
                     android:id="@+id/translation_input"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:hint="@string/hint_translated_word"
                     android:inputType="textCapSentences"
                     android:textColor="@color/word_native"
                     android:textColorHint="@color/text_hint"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/translate_button"
+                    style="@style/SmallSecondaryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/action_translate" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/translate_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/hint_set_target_language"
+                android:textColor="@color/text_hint"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"

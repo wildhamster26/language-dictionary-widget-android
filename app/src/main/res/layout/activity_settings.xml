@@ -80,6 +80,25 @@
                 android:id="@+id/sort_by_length_row"
                 layout="@layout/component_settings_toggle" />
 
+            <!-- Translation Section -->
+            <include
+                android:id="@+id/translation_header"
+                layout="@layout/component_section_header" />
+
+            <include
+                android:id="@+id/source_language_row"
+                layout="@layout/component_settings_language" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/outline_soft" />
+
+            <include
+                android:id="@+id/target_language_row"
+                layout="@layout/component_settings_language" />
+
         </LinearLayout>
     </ScrollView>
 
