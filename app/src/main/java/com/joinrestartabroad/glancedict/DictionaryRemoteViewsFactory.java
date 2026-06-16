@@ -75,7 +75,9 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         WidgetRow row = rows.get(position);
         if (row.categoryHeader) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_category_item);
-            views.setTextViewText(R.id.category_header, row.categoryName);
+            boolean isCollapsed = collapsedCategoryIds.contains(row.categoryId);
+            String prefix = isCollapsed ? "▶ " : "▼ ";
+            views.setTextViewText(R.id.category_header, prefix + row.categoryName);
             views.setTextViewTextSize(R.id.category_header, TypedValue.COMPLEX_UNIT_SP, categoryFontSizeSp);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_CATEGORY_ID, row.categoryId);
