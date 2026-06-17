@@ -1,0 +1,11 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.joinrestartabroad.glancedict.SettingsActivity"
+    android:initialLayout="@layout/widget_dictionary"
+    android:minWidth="180dp"
+    android:minHeight="110dp"
+    android:previewLayout="@layout/widget_dictionary"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="4"
+    android:targetCellHeight="5"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />
