@@ -266,20 +266,42 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     }
 
     public List<WidgetItem> getWidgetItems(Set<Long> activeCategoryIds) {
+        ensureDefaultCategory();
         List<WidgetItem> items = new ArrayList<>();
-        Set<Long> active = activeCategoryIds == null ? null : new HashSet<>(activeCategoryIds);
-        for (Category category : getCategories()) {
-            if (active != null && !active.contains(category.id)) {
-                continue;
-            }
+        List<String> args = new ArrayList<>();
 
-            List<Word> words = getWordsForCategory(category.id);
-            if (words.isEmpty()) {
-                continue;
-            }
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT c.id AS category_id, c.name AS category_name, ")
+                .append("w.id AS word_id, w.native_word, w.translated_word ")
+                .append("FROM ").append(TABLE_CATEGORIES).append(" c ")
+                .append("JOIN ").append(TABLE_WORDS).append(" w ON w.category_id = c.id");
+        String where = activeFilter("c.id", activeCategoryIds, args);
+        if (!where.isEmpty()) {
+            sql.append(" WHERE ").append(where);
+        }
+        args.add(DEFAULT_CATEGORY);
+        sql.append(" ORDER BY CASE WHEN c.name = ? THEN 0 ELSE 1 END, ")
+                .append("c.display_order ASC, c.name COLLATE NOCASE ASC, ")
+                .append("w.date_added DESC, w.id DESC");
 
-            items.add(WidgetItem.category(category.id, category.name));
-            for (Word word : words) {
+        long currentCategoryId = -1L;
+        try (Cursor cursor = getReadableDatabase().rawQuery(sql.toString(), args.toArray(new String[0]))) {
+            int categoryIdIndex = cursor.getColumnIndexOrThrow("category_id");
+            int categoryNameIndex = cursor.getColumnIndexOrThrow("category_name");
+            int wordIdIndex = cursor.getColumnIndexOrThrow("word_id");
+            int nativeIndex = cursor.getColumnIndexOrThrow("native_word");
+            int translatedIndex = cursor.getColumnIndexOrThrow("translated_word");
+            while (cursor.moveToNext()) {
+                long categoryId = cursor.getLong(categoryIdIndex);
+                if (categoryId != currentCategoryId) {
+                    items.add(WidgetItem.category(categoryId, cursor.getString(categoryNameIndex)));
+                    currentCategoryId = categoryId;
+                }
+                Word word = new Word(
+                        cursor.getLong(wordIdIndex),
+                        categoryId,
+                        cursor.getString(nativeIndex),
+                        cursor.getString(translatedIndex));
                 items.add(WidgetItem.word(word));
             }
         }
@@ -307,23 +329,6 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 getLongestActiveText(DictionaryPrefs.getActiveCategoryIds(context)));
     }
 
-    private List<Word> getWordsForCategory(long categoryId) {
-        List<Word> words = new ArrayList<>();
-        try (Cursor cursor = getReadableDatabase().query(
-                TABLE_WORDS,
-                new String[]{"id", "category_id", "native_word", "translated_word"},
-                "category_id = ?",
-                new String[]{"" + categoryId},
-                null,
-                null,
-                "date_added DESC, id DESC")) {
-            while (cursor.moveToNext()) {
-                words.add(readWord(cursor));
-            }
-        }
-        return words;
-    }
-
     private Long findCategoryId(String name) {
         try (Cursor cursor = getReadableDatabase().query(
                 TABLE_CATEGORIES,
@@ -347,7 +352,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private String queryLongestWordColumn(String column, Set<Long> activeCategoryIds) {
         List<String> args = new ArrayList<>();
-        String where = activeFilter(activeCategoryIds, args);
+        String where = activeFilter("category_id", activeCategoryIds, args);
         return queryLongestText(column, where, args);
     }
 
@@ -365,7 +370,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    private String activeFilter(Set<Long> activeCategoryIds, List<String> args) {
+    private String activeFilter(String column, Set<Long> activeCategoryIds, List<String> args) {
         if (activeCategoryIds == null) {
             return "";
         }
@@ -373,7 +378,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             return "0";
         }
 
-        StringBuilder filter = new StringBuilder("category_id").append(" IN (");
+        StringBuilder filter = new StringBuilder(column).append(" IN (");
         int index = 0;
         for (Long id : activeCategoryIds) {
             if (index > 0) {

@@ -21,6 +21,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:hint="@string/hint_new_category_name"
+            android:importantForAutofill="no"
             android:inputType="textCapWords"
             android:textColor="@color/word_native"
             android:textColorHint="@color/text_hint"

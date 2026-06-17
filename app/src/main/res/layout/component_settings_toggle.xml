@@ -16,7 +16,7 @@
             android:id="@+id/toggle_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Label"
+            android:text="@string/placeholder_label"
             android:textColor="@color/word_native"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -25,7 +25,7 @@
             android:id="@+id/toggle_sublabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sublabel"
+            android:text="@string/placeholder_sublabel"
             android:textColor="@color/text_hint"
             android:textSize="14sp" />
 

@@ -254,12 +254,12 @@ public class SettingsActivity extends Activity {
 
     private void updateLanguageValues() {
         String source = DictionaryPrefs.getSourceLanguage(this);
-        sourceLanguageValue.setText(new Locale(source).getDisplayLanguage(Locale.getDefault()));
+        sourceLanguageValue.setText(displayLanguage(source));
         sourceLanguageValue.setTextColor(getColor(R.color.word_native));
 
         String target = DictionaryPrefs.getTargetLanguage(this);
         if (target != null) {
-            targetLanguageValue.setText(new Locale(target).getDisplayLanguage(Locale.getDefault()));
+            targetLanguageValue.setText(displayLanguage(target));
             targetLanguageValue.setTextColor(getColor(R.color.word_native));
         } else {
             targetLanguageValue.setText(R.string.hint_tap_to_select);
@@ -369,11 +369,15 @@ public class SettingsActivity extends Activity {
     private List<LanguageItem> buildLanguageList() {
         List<LanguageItem> list = new ArrayList<>();
         for (String code : TranslateLanguage.getAllLanguages()) {
-            String display = new Locale(code).getDisplayLanguage(Locale.getDefault());
+            String display = displayLanguage(code);
             list.add(new LanguageItem(code, display));
         }
         Collections.sort(list, (a, b) -> a.displayName.compareTo(b.displayName));
         return list;
+    }
+
+    private String displayLanguage(String code) {
+        return Locale.forLanguageTag(code).getDisplayLanguage(Locale.getDefault());
     }
 
     private static final class LanguageItem {

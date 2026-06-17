@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingVertical="12dp">
@@ -16,7 +17,7 @@
             android:id="@+id/control_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Label"
+            android:text="@string/placeholder_label"
             android:textColor="@color/word_native"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -25,7 +26,7 @@
             android:id="@+id/control_sublabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sublabel"
+            android:text="@string/placeholder_sublabel"
             android:textColor="@color/text_hint"
             android:textSize="14sp" />
     </LinearLayout>
@@ -43,7 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:gravity="center"
-            android:text="—"
+            android:text="@string/action_decrement"
             android:textColor="@color/text_hint"
             android:textSize="18sp" />
 
@@ -52,7 +53,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="2"
+            android:text="@string/placeholder_control_value"
             android:textColor="@color/word_native"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -62,7 +63,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:gravity="center"
-            android:text="+"
+            android:text="@string/add_icon"
             android:textColor="@color/text_hint"
             android:textSize="18sp" />
     </LinearLayout>

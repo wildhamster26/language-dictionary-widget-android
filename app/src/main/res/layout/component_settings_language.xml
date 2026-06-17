@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingVertical="12dp">
@@ -19,7 +19,7 @@
             android:id="@+id/language_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Label"
+            android:text="@string/placeholder_label"
             android:textColor="@color/word_native"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -28,7 +28,7 @@
             android:id="@+id/language_sublabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sublabel"
+            android:text="@string/placeholder_sublabel"
             android:textColor="@color/text_hint"
             android:textSize="14sp" />
 
@@ -43,7 +43,7 @@
         android:minWidth="80dp"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
-        android:text="English"
+        android:text="@string/placeholder_language"
         android:textColor="@color/word_native"
         android:textSize="14sp" />
 

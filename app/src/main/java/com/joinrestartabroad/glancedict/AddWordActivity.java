@@ -167,12 +167,14 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         try {
             activeTranslator.translate(nativeWord)
                     .addOnSuccessListener(result -> {
+                        closeTranslator(translator);
                         if (!destroyed) {
                             translationInput.setText(result);
                             resetTranslateButton();
                         }
                     })
                     .addOnFailureListener(e -> {
+                        closeTranslator(translator);
                         if (!destroyed) {
                             resetTranslateButton();
                             Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
@@ -183,6 +185,13 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
             activeTranslator = null;
             resetTranslateButton();
             Toast.makeText(this, R.string.toast_translation_failed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void closeTranslator(Translator translator) {
+        translator.close();
+        if (activeTranslator == translator) {
+            activeTranslator = null;
         }
     }
 

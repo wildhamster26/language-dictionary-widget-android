@@ -25,6 +25,7 @@
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:importantForAccessibility="no"
         android:layout_marginStart="-36dp"
         android:src="@drawable/ic_folder" />
 
@@ -39,7 +40,7 @@
             android:id="@+id/category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category Name"
+            android:text="@string/placeholder_category_name"
             android:textColor="@color/word_native"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -48,7 +49,7 @@
             android:id="@+id/word_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 Words"
+            android:text="@string/placeholder_word_count"
             android:textColor="@color/text_hint"
             android:textSize="14sp"
             android:textStyle="bold" />

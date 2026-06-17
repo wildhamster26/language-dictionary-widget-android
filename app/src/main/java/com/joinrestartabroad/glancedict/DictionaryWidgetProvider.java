@@ -52,6 +52,7 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
         updateAppWidget(context, appWidgetManager, appWidgetId);
     }
 
+    @SuppressWarnings("deprecation")
     public static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
         int columnCount = DictionaryPrefs.getColumnCount(context);
 

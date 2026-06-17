@@ -7,19 +7,12 @@
     android:paddingTop="24dp"
     android:paddingBottom="16dp">
 
-    <ImageView
-        android:id="@+id/section_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_display"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/section_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
-        android:text="Section Title"
+        android:text="@string/placeholder_section_title"
         android:textColor="@color/button_create_bg"
         android:textSize="18sp"
         android:textStyle="bold" />

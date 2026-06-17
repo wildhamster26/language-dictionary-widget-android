@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Glance Dictionary</string>
-    <string name="uncategorized">General</string>
-    <string name="select_all">Select all</string>
-    <string name="deselect_all">Deselect all</string>
     <string name="settings_icon">Settings</string>
     <string name="footer_link_text">See more at Restart Abroad</string>
     <string name="add_icon">+</string>
     <string name="widget_empty_text">Tap + to add your first word</string>
-    <string name="word_count_format">%1$d Words</string>
+    <plurals name="word_count_format">
+        <item quantity="one">%1$d Word</item>
+        <item quantity="other">%1$d Words</item>
+    </plurals>
     <string name="settings_display_section">Display</string>
     <string name="settings_font_size">Font Size</string>
     <string name="settings_font_size_sub">Adjust text readability</string>
@@ -20,13 +20,11 @@
     <string name="settings_sort_by_length_sub">Reorders words within each category to reduce wasted row space</string>
     <string name="toggle_on">ON</string>
     <string name="toggle_off">OFF</string>
-    <string name="settings_categories_section">Displayed Categories</string>
     <string name="font_size_format">%1$dsp</string>
 
     <string name="title_add_words">Add Words</string>
     <string name="title_edit_word">Edit Word</string>
     <string name="title_widget_settings">Widget Settings</string>
-    <string name="title_manage_categories">Manage Categories</string>
 
     <string name="label_category">CATEGORY</string>
     <string name="label_word_pair">WORD PAIR</string>
@@ -51,8 +49,15 @@
     <string name="privacy_policy_url">https://joinrestartabroad.com/tools/glance-dictionary/privacy</string>
 
     <string name="content_description_close">Close</string>
-    <string name="content_description_back">Back</string>
     <string name="content_description_reorder">Reorder</string>
+    <string name="placeholder_category_name">Category Name</string>
+    <string name="placeholder_word_count">0 Words</string>
+    <string name="placeholder_section_title">Section Title</string>
+    <string name="placeholder_label">Label</string>
+    <string name="placeholder_sublabel">Sublabel</string>
+    <string name="placeholder_language">English</string>
+    <string name="action_decrement">-</string>
+    <string name="placeholder_control_value">2</string>
 
     <string name="settings_translation_section">Translation</string>
     <string name="settings_my_language">My language</string>

@@ -78,7 +78,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ItemViewHolder h = (ItemViewHolder) holder;
             Category category = categories.get(position - 1);
             h.nameView.setText(category.name);
-            h.wordCountView.setText(h.itemView.getContext().getString(R.string.word_count_format, category.wordCount));
+            h.wordCountView.setText(h.itemView.getContext().getResources()
+                    .getQuantityString(R.plurals.word_count_format, category.wordCount, category.wordCount));
             h.activeCheckbox.setOnCheckedChangeListener(null);
             h.activeCheckbox.setChecked(activeCategoryIds.contains(category.id));
             h.activeCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
