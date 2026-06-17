@@ -13,13 +13,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,14 +45,24 @@ public class SettingsActivity extends Activity {
     private TextView sourceLanguageValue;
     private TextView targetLanguageValue;
     private View welcomeState;
-    private View settingsScroll;
+    private View settingsTabs;
+    private View panelGeneral;
+    private View panelLanguage;
     private View settingsBottomActions;
+    private TextView tabGeneral;
+    private TextView tabLanguage;
+    private View tabGeneralIndicator;
+    private View tabLanguageIndicator;
+    private LinearLayout downloadedModelsContainer;
+    private TextView downloadedEmpty;
     private TextView welcomeMessage;
     private View welcomeCreateWidgetButton;
     private AlertDialog downloadProgressDialog;
     private Translator downloadTranslator;
     private static final long DOWNLOAD_TIMEOUT_MS = 60_000L;
     private final Runnable downloadTimeoutRunnable = this::onDownloadTimeout;
+    private final RemoteModelManager modelManager = RemoteModelManager.getInstance();
+    private boolean onGeneralTab = true;
     private int fontSizeSp;
     private int categoryFontSizeSp;
     private int columnCount;
@@ -70,23 +85,34 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // The widget no longer declares a configuration activity, so this activity is
+        // only ever opened from the launcher icon or from a widget's gear button (which
+        // passes its id). There is no widget-configuration result to report.
         appWidgetId = getIntent().getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-            setResult(RESULT_CANCELED);
-            setFinishOnTouchOutside(false);
-        } else {
-            checkAndRequestWidgetPinning();
-        }
 
         db = new DictionaryDbHelper(this);
         welcomeState = findViewById(R.id.welcome_state);
-        settingsScroll = findViewById(R.id.settings_scroll);
+        settingsTabs = findViewById(R.id.settings_tabs);
+        panelGeneral = findViewById(R.id.panel_general);
+        panelLanguage = findViewById(R.id.panel_language);
         settingsBottomActions = findViewById(R.id.settings_bottom_actions);
         welcomeMessage = findViewById(R.id.welcome_message);
         welcomeCreateWidgetButton = findViewById(R.id.welcome_create_widget);
         welcomeCreateWidgetButton.setOnClickListener(v -> checkAndRequestWidgetPinning());
+
+        // Tabs
+        tabGeneral = findViewById(R.id.tab_general);
+        tabLanguage = findViewById(R.id.tab_language);
+        tabGeneralIndicator = findViewById(R.id.tab_general_indicator);
+        tabLanguageIndicator = findViewById(R.id.tab_language_indicator);
+        tabGeneral.setOnClickListener(v -> switchTab(true));
+        tabLanguage.setOnClickListener(v -> switchTab(false));
+
+        downloadedModelsContainer = findViewById(R.id.downloaded_models_container);
+        downloadedEmpty = findViewById(R.id.downloaded_empty);
+
         updateWelcomeState();
 
         // Display Section Header
@@ -166,20 +192,23 @@ public class SettingsActivity extends Activity {
         targetLanguageValue = targetLanguageRow.findViewById(R.id.language_value);
         targetLanguageRow.setOnClickListener(v -> showLanguagePickerDialog(false));
 
+        // Downloaded languages Section
+        View downloadedHeader = findViewById(R.id.downloaded_header);
+        ((TextView) downloadedHeader.findViewById(R.id.section_title)).setText(R.string.settings_downloaded_section);
+
         updateFontValue();
         updateCategoryFontValue();
         updateColumnsValue();
         updateSortByLengthButton();
         updateLanguageValues();
+        applyTabVisibility();
+        refreshDownloadedModels();
     }
 
     private void finishConfiguration() {
         if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
             AppWidgetManager manager = AppWidgetManager.getInstance(this);
             DictionaryWidgetProvider.updateAppWidget(this, manager, appWidgetId);
-            Intent result = new Intent();
-            result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            setResult(RESULT_OK, result);
         }
         finish();
     }
@@ -224,6 +253,29 @@ public class SettingsActivity extends Activity {
     protected void onResume() {
         super.onResume();
         updateWelcomeState();
+    }
+
+    private void switchTab(boolean generalTab) {
+        onGeneralTab = generalTab;
+        applyTabVisibility();
+        if (!generalTab) {
+            refreshDownloadedModels();
+        }
+    }
+
+    private void applyTabVisibility() {
+        if (panelGeneral == null || panelLanguage == null) {
+            return;
+        }
+        // Welcome state owns the body when no widget exists; leave panels hidden.
+        boolean welcomeShowing = welcomeState != null && welcomeState.getVisibility() == View.VISIBLE;
+        panelGeneral.setVisibility(!welcomeShowing && onGeneralTab ? View.VISIBLE : View.GONE);
+        panelLanguage.setVisibility(!welcomeShowing && !onGeneralTab ? View.VISIBLE : View.GONE);
+
+        tabGeneral.setTextColor(getColor(onGeneralTab ? R.color.button_create_bg : R.color.text_hint));
+        tabLanguage.setTextColor(getColor(onGeneralTab ? R.color.text_hint : R.color.button_create_bg));
+        tabGeneralIndicator.setVisibility(onGeneralTab ? View.VISIBLE : View.INVISIBLE);
+        tabLanguageIndicator.setVisibility(onGeneralTab ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void changeFontSize(int delta) {
@@ -383,6 +435,7 @@ public class SettingsActivity extends Activity {
                                 downloadProgressDialog.dismiss();
                             }
                             Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
+                            refreshDownloadedModels();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -438,6 +491,68 @@ public class SettingsActivity extends Activity {
                 .show();
     }
 
+    private void refreshDownloadedModels() {
+        modelManager.getDownloadedModels(TranslateRemoteModel.class)
+                .addOnSuccessListener(models -> {
+                    if (!destroyed) renderDownloadedModels(models);
+                })
+                .addOnFailureListener(e -> {
+                    if (!destroyed) renderDownloadedModels(Collections.emptySet());
+                });
+    }
+
+    private void renderDownloadedModels(Set<TranslateRemoteModel> models) {
+        if (downloadedModelsContainer == null || downloadedEmpty == null) return;
+        downloadedModelsContainer.removeAllViews();
+
+        List<String> codes = new ArrayList<>();
+        for (TranslateRemoteModel model : models) {
+            codes.add(model.getLanguage());
+        }
+        //noinspection ComparatorCombinators
+        Collections.sort(codes, (a, b) -> displayLanguage(a).compareTo(displayLanguage(b)));
+
+        if (codes.isEmpty()) {
+            downloadedEmpty.setVisibility(View.VISIBLE);
+            downloadedModelsContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        downloadedEmpty.setVisibility(View.GONE);
+        downloadedModelsContainer.setVisibility(View.VISIBLE);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (String code : codes) {
+            View row = inflater.inflate(R.layout.component_downloaded_model, downloadedModelsContainer, false);
+            ((TextView) row.findViewById(R.id.model_language)).setText(displayLanguage(code));
+            ((TextView) row.findViewById(R.id.model_code)).setText(code);
+            row.findViewById(R.id.model_delete).setOnClickListener(v -> confirmDeleteModel(code));
+            downloadedModelsContainer.addView(row);
+        }
+    }
+
+    private void confirmDeleteModel(String code) {
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle(getString(R.string.dialog_delete_model_title, displayLanguage(code)))
+                .setMessage(R.string.dialog_delete_model_message)
+                .setNegativeButton(R.string.action_cancel, null)
+                .setPositiveButton(R.string.action_delete, (dialog, which) -> deleteModel(code))
+                .show();
+    }
+
+    private void deleteModel(String code) {
+        TranslateRemoteModel model = new TranslateRemoteModel.Builder(code).build();
+        modelManager.deleteDownloadedModel(model)
+                .addOnSuccessListener(unused -> {
+                    if (destroyed) return;
+                    Toast.makeText(this, R.string.toast_model_removed, Toast.LENGTH_SHORT).show();
+                    refreshDownloadedModels();
+                })
+                .addOnFailureListener(e -> {
+                    if (destroyed) return;
+                    Toast.makeText(this, R.string.toast_model_remove_failed, Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private List<LanguageItem> buildLanguageList() {
         List<LanguageItem> list = new ArrayList<>();
         for (String code : TranslateLanguage.getAllLanguages()) {
@@ -487,7 +602,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void updateWelcomeState() {
-        if (welcomeState == null || settingsScroll == null || settingsBottomActions == null) {
+        if (welcomeState == null || settingsTabs == null || settingsBottomActions == null) {
             return;
         }
 
@@ -497,8 +612,10 @@ public class SettingsActivity extends Activity {
         boolean showWelcome = appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID && !hasWidget;
 
         welcomeState.setVisibility(showWelcome ? View.VISIBLE : View.GONE);
-        settingsScroll.setVisibility(showWelcome ? View.GONE : View.VISIBLE);
+        settingsTabs.setVisibility(showWelcome ? View.GONE : View.VISIBLE);
         settingsBottomActions.setVisibility(showWelcome ? View.GONE : View.VISIBLE);
+        applyTabVisibility();
+
         if (welcomeCreateWidgetButton != null) {
             boolean canPin = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
                     && appWidgetManager.isRequestPinAppWidgetSupported();

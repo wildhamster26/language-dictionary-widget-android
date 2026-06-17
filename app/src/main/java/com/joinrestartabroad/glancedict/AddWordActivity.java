@@ -165,7 +165,11 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         }
 
         try {
-            activeTranslator.translate(nativeWord)
+            // Download the model if it isn't already present, then translate. ML Kit's
+            // translate() fails outright when the model is missing, so chaining the
+            // download avoids a spurious "Translation failed" on the first use of a pair.
+            activeTranslator.downloadModelIfNeeded()
+                    .onSuccessTask(unused -> translator.translate(nativeWord))
                     .addOnSuccessListener(result -> {
                         closeTranslator(translator);
                         if (!destroyed) {

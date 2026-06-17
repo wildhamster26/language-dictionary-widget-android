@@ -29,8 +29,77 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <!-- Tab Strip -->
+    <LinearLayout
+        android:id="@+id/settings_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tab_general"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center"
+                    android:text="@string/tab_general"
+                    android:textColor="@color/button_create_bg"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/tab_general_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/button_create_bg" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tab_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center"
+                    android:text="@string/tab_language"
+                    android:textColor="@color/text_hint"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/tab_language_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/button_create_bg"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/outline_soft" />
+    </LinearLayout>
+
+    <!-- General Panel -->
     <ScrollView
-        android:id="@+id/settings_scroll"
+        android:id="@+id/panel_general"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -42,7 +111,6 @@
             android:paddingHorizontal="20dp"
             android:paddingBottom="20dp">
 
-            <!-- Display Section -->
             <include
                 android:id="@+id/display_header"
                 layout="@layout/component_section_header" />
@@ -81,7 +149,24 @@
                 android:id="@+id/sort_by_length_row"
                 layout="@layout/component_settings_toggle" />
 
-            <!-- Translation Section -->
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Language Panel -->
+    <ScrollView
+        android:id="@+id/panel_language"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="20dp">
+
             <include
                 android:id="@+id/translation_header"
                 layout="@layout/component_section_header" />
@@ -100,9 +185,29 @@
                 android:id="@+id/target_language_row"
                 layout="@layout/component_settings_language" />
 
+            <include
+                android:id="@+id/downloaded_header"
+                layout="@layout/component_section_header" />
+
+            <LinearLayout
+                android:id="@+id/downloaded_models_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/downloaded_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/settings_downloaded_empty"
+                android:textColor="@color/text_hint"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 
+    <!-- Welcome State -->
     <LinearLayout
         android:id="@+id/welcome_state"
         android:layout_width="match_parent"
