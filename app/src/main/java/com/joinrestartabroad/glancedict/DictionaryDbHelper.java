@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +59,16 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     }
 
     private void loadInitialData(SQLiteDatabase db) {
-        try (InputStream is = mContext.getAssets().open("initial_data.json")) {
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
+        try (Reader reader = new InputStreamReader(
+                mContext.getAssets().open("initial_data.json"),
+                StandardCharsets.UTF_8)) {
+            StringBuilder result = new StringBuilder();
+            char[] buffer = new char[1024];
             int length;
-            while ((length = is.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
+            while ((length = reader.read(buffer)) != -1) {
+                result.append(buffer, 0, length);
             }
-            String json = new String(result.toByteArray(), StandardCharsets.UTF_8);
+            String json = result.toString();
 
             List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(json);
             long now = System.currentTimeMillis();

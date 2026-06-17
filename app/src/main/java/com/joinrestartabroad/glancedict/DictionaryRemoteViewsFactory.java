@@ -178,13 +178,10 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         }
 
         if (sortByLength) {
-            Collections.sort(pendingWords, new java.util.Comparator<WidgetItem>() {
-                @Override
-                public int compare(WidgetItem a, WidgetItem b) {
-                    int lenA = a.primary.length() + a.secondary.length();
-                    int lenB = b.primary.length() + b.secondary.length();
-                    return Integer.compare(lenA, lenB);
-                }
+            Collections.sort(pendingWords, (a, b) -> {
+                int lenA = a.primary.length() + a.secondary.length();
+                int lenB = b.primary.length() + b.secondary.length();
+                return Integer.compare(lenA, lenB);
             });
         }
 
