@@ -21,6 +21,10 @@
     <string name="toggle_on">ON</string>
     <string name="toggle_off">OFF</string>
     <string name="font_size_format">%1$dsp</string>
+    <string name="title_welcome_widget">Create your widget</string>
+    <string name="body_welcome_widget">Glance Dictionary only works through the home screen widget. Add it to your home screen to start using the app.</string>
+    <string name="action_create_widget">Create widget</string>
+    <string name="body_widget_unsupported">Your launcher does not support creating widgets from this screen. Add the widget from the home screen instead.</string>
 
     <string name="title_add_words">Add Words</string>
     <string name="title_edit_word">Edit Word</string>

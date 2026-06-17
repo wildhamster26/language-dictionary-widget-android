@@ -39,6 +39,11 @@ public class SettingsActivity extends Activity {
     private TextView sortByLengthButton;
     private TextView sourceLanguageValue;
     private TextView targetLanguageValue;
+    private View welcomeState;
+    private View settingsScroll;
+    private View settingsBottomActions;
+    private TextView welcomeMessage;
+    private View welcomeCreateWidgetButton;
     private AlertDialog downloadProgressDialog;
     private int fontSizeSp;
     private int categoryFontSizeSp;
@@ -73,6 +78,13 @@ public class SettingsActivity extends Activity {
         }
 
         db = new DictionaryDbHelper(this);
+        welcomeState = findViewById(R.id.welcome_state);
+        settingsScroll = findViewById(R.id.settings_scroll);
+        settingsBottomActions = findViewById(R.id.settings_bottom_actions);
+        welcomeMessage = findViewById(R.id.welcome_message);
+        welcomeCreateWidgetButton = findViewById(R.id.welcome_create_widget);
+        welcomeCreateWidgetButton.setOnClickListener(v -> checkAndRequestWidgetPinning());
+        updateWelcomeState();
 
         // Display Section Header
         View displayHeader = findViewById(R.id.display_header);
@@ -198,6 +210,12 @@ public class SettingsActivity extends Activity {
         if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
             downloadProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateWelcomeState();
     }
 
     private void changeFontSize(int delta) {
@@ -409,6 +427,32 @@ public class SettingsActivity extends Activity {
 
                     appWidgetManager.requestPinAppWidget(provider, null, successCallback);
                 }
+            }
+        }
+        updateWelcomeState();
+    }
+
+    private void updateWelcomeState() {
+        if (welcomeState == null || settingsScroll == null || settingsBottomActions == null) {
+            return;
+        }
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        ComponentName provider = new ComponentName(this, DictionaryWidgetProvider.class);
+        boolean hasWidget = appWidgetManager.getAppWidgetIds(provider).length > 0;
+        boolean showWelcome = appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID && !hasWidget;
+
+        welcomeState.setVisibility(showWelcome ? View.VISIBLE : View.GONE);
+        settingsScroll.setVisibility(showWelcome ? View.GONE : View.VISIBLE);
+        settingsBottomActions.setVisibility(showWelcome ? View.GONE : View.VISIBLE);
+        if (welcomeCreateWidgetButton != null) {
+            boolean canPin = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
+                    && appWidgetManager.isRequestPinAppWidgetSupported();
+            welcomeCreateWidgetButton.setEnabled(canPin);
+            if (welcomeMessage != null) {
+                welcomeMessage.setText(canPin
+                        ? R.string.body_welcome_widget
+                        : R.string.body_widget_unsupported);
             }
         }
     }
