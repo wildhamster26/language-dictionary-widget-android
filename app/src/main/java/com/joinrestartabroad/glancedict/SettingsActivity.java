@@ -45,6 +45,9 @@ public class SettingsActivity extends Activity {
     private TextView welcomeMessage;
     private View welcomeCreateWidgetButton;
     private AlertDialog downloadProgressDialog;
+    private Translator downloadTranslator;
+    private static final long DOWNLOAD_TIMEOUT_MS = 60_000L;
+    private final Runnable downloadTimeoutRunnable = this::onDownloadTimeout;
     private int fontSizeSp;
     private int categoryFontSizeSp;
     private int columnCount;
@@ -204,8 +207,13 @@ public class SettingsActivity extends Activity {
         super.onDestroy();
         destroyed = true;
         executor.shutdownNow();
+        mainHandler.removeCallbacks(downloadTimeoutRunnable);
         if (db != null) {
             db.close();
+        }
+        if (downloadTranslator != null) {
+            downloadTranslator.close();
+            downloadTranslator = null;
         }
         if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
             downloadProgressDialog.dismiss();
@@ -328,12 +336,8 @@ public class SettingsActivity extends Activity {
         if (source == null || target == null) return;
         if (source.equals(target)) return;
 
-        downloadProgressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                .setMessage(R.string.dialog_downloading_model)
-                .setCancelable(false)
-                .create();
-        downloadProgressDialog.show();
-
+        // Build options before showing any progress so an unsupported language is
+        // reported accurately instead of as a network failure.
         TranslatorOptions options;
         try {
             options = new TranslatorOptions.Builder()
@@ -341,7 +345,7 @@ public class SettingsActivity extends Activity {
                     .setTargetLanguage(target)
                     .build();
         } catch (IllegalArgumentException e) {
-            showDownloadFailedDialog();
+            showUnsupportedLanguageDialog();
             return;
         }
 
@@ -352,23 +356,64 @@ public class SettingsActivity extends Activity {
             showDownloadFailedDialog();
             return;
         }
+        downloadTranslator = translator;
+
+        downloadProgressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setMessage(R.string.dialog_downloading_model)
+                .setCancelable(true)
+                .setOnCancelListener(d -> {
+                    mainHandler.removeCallbacks(downloadTimeoutRunnable);
+                    closeDownloadTranslator(translator);
+                })
+                .create();
+        downloadProgressDialog.show();
+        mainHandler.postDelayed(downloadTimeoutRunnable, DOWNLOAD_TIMEOUT_MS);
 
         try {
             translator.downloadModelIfNeeded()
                     .addOnSuccessListener(unused -> {
-                        translator.close();
+                        if (downloadTranslator != translator) {
+                            translator.close();
+                            return;
+                        }
+                        mainHandler.removeCallbacks(downloadTimeoutRunnable);
+                        closeDownloadTranslator(translator);
                         if (!destroyed) {
-                            downloadProgressDialog.dismiss();
+                            if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
+                                downloadProgressDialog.dismiss();
+                            }
                             Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(e -> {
-                        translator.close();
+                        if (downloadTranslator != translator) {
+                            translator.close();
+                            return;
+                        }
+                        mainHandler.removeCallbacks(downloadTimeoutRunnable);
+                        closeDownloadTranslator(translator);
                         showDownloadFailedDialog();
                     });
         } catch (RuntimeException e) {
-            translator.close();
+            mainHandler.removeCallbacks(downloadTimeoutRunnable);
+            closeDownloadTranslator(translator);
             showDownloadFailedDialog();
+        }
+    }
+
+    private void onDownloadTimeout() {
+        Translator translator = downloadTranslator;
+        downloadTranslator = null;
+        if (translator != null) {
+            translator.close();
+        }
+        showDownloadFailedDialog();
+    }
+
+    private void closeDownloadTranslator(Translator translator) {
+        translator.close();
+        if (downloadTranslator == translator) {
+            downloadTranslator = null;
         }
     }
 
@@ -380,6 +425,15 @@ public class SettingsActivity extends Activity {
         new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
                 .setTitle(R.string.dialog_download_failed_title)
                 .setMessage(R.string.dialog_download_failed_message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+    private void showUnsupportedLanguageDialog() {
+        if (destroyed) return;
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle(R.string.dialog_language_unsupported_title)
+                .setMessage(R.string.dialog_language_unsupported_message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
