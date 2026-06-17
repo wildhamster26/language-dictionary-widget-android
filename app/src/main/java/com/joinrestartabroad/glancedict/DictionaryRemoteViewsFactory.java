@@ -82,6 +82,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             views.setTextViewText(R.id.category_header, prefix + row.categoryName);
             views.setTextViewTextSize(R.id.category_header, TypedValue.COMPLEX_UNIT_SP, categoryFontSizeSp);
             Intent fillInIntent = new Intent();
+            fillInIntent.setAction(DictionaryWidgetProvider.ACTION_TOGGLE_CATEGORY);
             fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_CATEGORY_ID, row.categoryId);
             views.setOnClickFillInIntent(R.id.category_header, fillInIntent);
             return views;
@@ -109,10 +110,12 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             views.setTextViewTextSize(TRANSLATION_IDS[index], TypedValue.COMPLEX_UNIT_SP, Math.max(10, fontSizeSp - 1));
 
             Intent fillInIntent = new Intent();
+            fillInIntent.setAction(DictionaryWidgetProvider.ACTION_OPEN_WORD);
             fillInIntent.putExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, word.wordId);
             views.setOnClickFillInIntent(CELL_IDS[index], fillInIntent);
 
             Intent copyIntent = new Intent();
+            copyIntent.setAction(DictionaryWidgetProvider.ACTION_COPY_WORD);
             copyIntent.putExtra(DictionaryWidgetProvider.EXTRA_WORD_ID, word.wordId);
             copyIntent.putExtra(DictionaryWidgetProvider.EXTRA_COPY_TARGET, true);
             views.setOnClickFillInIntent(TRANSLATION_IDS[index], copyIntent);

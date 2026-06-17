@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -67,7 +66,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             while ((length = is.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
             }
-            String json = result.toString(StandardCharsets.UTF_8.name());
+            String json = new String(result.toByteArray(), StandardCharsets.UTF_8);
 
             List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(json);
             long now = System.currentTimeMillis();

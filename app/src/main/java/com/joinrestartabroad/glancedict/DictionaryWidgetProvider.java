@@ -15,6 +15,11 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
     public static final String EXTRA_COPY_TARGET = "com.joinrestartabroad.glancedict.EXTRA_COPY_TARGET";
     public static final String ACTION_WIDGET_PINNED = "com.joinrestartabroad.glancedict.ACTION_WIDGET_PINNED";
     public static final String ACTION_CLOSE_SETTINGS = "com.joinrestartabroad.glancedict.ACTION_CLOSE_SETTINGS";
+    public static final String ACTION_ADD_WORD = "com.joinrestartabroad.glancedict.ACTION_ADD_WORD";
+    public static final String ACTION_SETTINGS = "com.joinrestartabroad.glancedict.ACTION_SETTINGS";
+    public static final String ACTION_OPEN_WORD = "com.joinrestartabroad.glancedict.ACTION_OPEN_WORD";
+    public static final String ACTION_COPY_WORD = "com.joinrestartabroad.glancedict.ACTION_COPY_WORD";
+    public static final String ACTION_TOGGLE_CATEGORY = "com.joinrestartabroad.glancedict.ACTION_TOGGLE_CATEGORY";
 
     private static final int REQUEST_BASE_ITEM   = 20000;
     private static final int REQUEST_BASE_FOOTER = 30000;
@@ -52,7 +57,6 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
         updateAppWidget(context, appWidgetManager, appWidgetId);
     }
 
-    @SuppressWarnings("deprecation")
     public static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
         int columnCount = DictionaryPrefs.getColumnCount(context);
 
@@ -80,18 +84,21 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
 
         views.setOnClickPendingIntent(
                 R.id.widget_add,
-                activityPendingIntent(context, AddWordActivity.class, appWidgetId));
+                activityPendingIntent(context, AddWordActivity.class, ACTION_ADD_WORD, appWidgetId));
         views.setOnClickPendingIntent(
                 R.id.widget_settings,
-                activityPendingIntent(context, SettingsActivity.class, appWidgetId));
+                activityPendingIntent(context, SettingsActivity.class, ACTION_SETTINGS, appWidgetId));
 
         Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://joinrestartabroad.com"));
+        urlIntent.setPackage(null);
         views.setOnClickPendingIntent(
                 R.id.widget_footer_link,
                 PendingIntent.getActivity(context, appWidgetId + REQUEST_BASE_FOOTER, urlIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
 
         Intent itemIntent = new Intent(context, QuickActionActivity.class);
+        itemIntent.setPackage(context.getPackageName());
+        itemIntent.setData(widgetUri(appWidgetId, "item-template"));
         PendingIntent itemPendingIntent = PendingIntent.getActivity(
                 context,
                 appWidgetId + REQUEST_BASE_ITEM,
@@ -106,13 +113,21 @@ public class DictionaryWidgetProvider extends AppWidgetProvider {
     private static PendingIntent activityPendingIntent(
             Context context,
             Class<?> activityClass,
+            String action,
             int appWidgetId) {
         Intent intent = new Intent(context, activityClass);
+        intent.setAction(action);
+        intent.setPackage(context.getPackageName());
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(widgetUri(appWidgetId, action));
         return PendingIntent.getActivity(
                 context,
                 appWidgetId + activityClass.getName().hashCode(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    private static Uri widgetUri(int appWidgetId, String target) {
+        return Uri.parse("glancedict://widget/" + appWidgetId + "/" + target);
     }
 }

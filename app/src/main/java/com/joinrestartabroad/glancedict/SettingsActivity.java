@@ -372,6 +372,7 @@ public class SettingsActivity extends Activity {
             String display = displayLanguage(code);
             list.add(new LanguageItem(code, display));
         }
+        //noinspection ComparatorCombinators
         Collections.sort(list, (a, b) -> a.displayName.compareTo(b.displayName));
         return list;
     }
