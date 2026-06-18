@@ -23,6 +23,8 @@ public class QuickActionActivity extends Activity {
     private Spinner categorySpinner;
     private EditText nativeInput;
     private EditText translationInput;
+    private EditText romanizationInput;
+    private View romanizationField;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean destroyed;
@@ -58,10 +60,23 @@ public class QuickActionActivity extends Activity {
         categorySpinner = findViewById(R.id.category_spinner);
         nativeInput = findViewById(R.id.native_input);
         translationInput = findViewById(R.id.translation_input);
+        romanizationInput = findViewById(R.id.romanization_input);
+        romanizationField = findViewById(R.id.romanization_field);
 
         bindCategories();
         nativeInput.setText(word.nativeWord);
         translationInput.setText(word.translatedWord);
+
+        String targetLanguage = DictionaryPrefs.getTargetLanguage(this);
+        boolean romanizationSupported = Romanizer.isSupported(targetLanguage);
+        romanizationField.setVisibility(romanizationSupported ? View.VISIBLE : View.GONE);
+        if (romanizationSupported) {
+            String romanization = word.romanization;
+            if (romanization == null || romanization.isEmpty()) {
+                romanization = Romanizer.romanize(word.translatedWord, targetLanguage);
+            }
+            romanizationInput.setText(romanization);
+        }
         translationInput.setOnLongClickListener(v -> {
             copyTranslatedWord(translationInput.getText().toString().trim());
             return false;
@@ -113,8 +128,9 @@ public class QuickActionActivity extends Activity {
         }
 
         long catId = category.id;
+        String romanization = romanizationInput.getText().toString().trim();
         executor.execute(() -> {
-            db.updateWord(wordId, catId, nativeWord, translatedWord);
+            db.updateWord(wordId, catId, nativeWord, translatedWord, romanization);
             db.refreshLongestTextCache(getApplicationContext());
             mainHandler.post(() -> {
                 if (!destroyed) {

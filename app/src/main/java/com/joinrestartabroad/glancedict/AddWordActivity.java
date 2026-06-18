@@ -34,6 +34,8 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
     private Spinner categorySpinner;
     private EditText nativeInput;
     private EditText translationInput;
+    private EditText romanizationInput;
+    private View romanizationField;
     private EditText bulkInput;
     private TextView saveButton;
     private View panelWords;
@@ -62,6 +64,8 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         categorySpinner = findViewById(R.id.category_spinner);
         nativeInput = findViewById(R.id.native_input);
         translationInput = findViewById(R.id.translation_input);
+        romanizationInput = findViewById(R.id.romanization_input);
+        romanizationField = findViewById(R.id.romanization_field);
         bulkInput = findViewById(R.id.bulk_input);
         saveButton = findViewById(R.id.save_word);
         panelWords = findViewById(R.id.panel_words);
@@ -99,6 +103,15 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         super.onResume();
         bindSpinnerCategories();
         updateTranslateButton();
+        updateRomanizationVisibility();
+    }
+
+    private void updateRomanizationVisibility() {
+        boolean supported = Romanizer.isSupported(DictionaryPrefs.getTargetLanguage(this));
+        romanizationField.setVisibility(supported ? View.VISIBLE : View.GONE);
+        if (!supported) {
+            romanizationInput.setText("");
+        }
     }
 
     @Override
@@ -131,6 +144,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         if (target == null) return;
         if (target.equals(source)) {
             translationInput.setText(nativeWord);
+            fillRomanization(nativeWord, target);
             return;
         }
 
@@ -174,6 +188,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
                         closeTranslator(translator);
                         if (!destroyed) {
                             translationInput.setText(result);
+                            fillRomanization(result, target);
                             resetTranslateButton();
                         }
                     })
@@ -202,6 +217,13 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
     private void resetTranslateButton() {
         translateButton.setText(R.string.action_translate);
         updateTranslateButton();
+    }
+
+    private void fillRomanization(String text, String targetLanguage) {
+        if (romanizationField.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        romanizationInput.setText(Romanizer.romanize(text, targetLanguage));
     }
 
     private void switchTab(boolean wordsTab) {
@@ -328,6 +350,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
         String bulk = bulkInput.getText().toString().trim();
         String nativeWord = nativeInput.getText().toString().trim();
         String translatedWord = translationInput.getText().toString().trim();
+        String romanization = romanizationInput.getText().toString().trim();
 
         if (bulk.isEmpty() && (nativeWord.isEmpty() || translatedWord.isEmpty())) {
             Toast.makeText(this, "Enter a word pair or use bulk upload.", Toast.LENGTH_SHORT).show();
@@ -352,7 +375,7 @@ public class AddWordActivity extends Activity implements CategoryAdapter.OnCateg
                 } else if (!bulk.isEmpty()) {
                     saved = workerDb.addWords(categoryId, BulkWordParser.parse(bulk));
                 } else {
-                    if (workerDb.addWord(categoryId, nativeWord, translatedWord) > 0) {
+                    if (workerDb.addWord(categoryId, nativeWord, translatedWord, romanization) > 0) {
                         saved = 1;
                     }
                 }

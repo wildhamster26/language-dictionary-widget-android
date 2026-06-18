@@ -199,6 +199,29 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/romanization_field"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_field"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/romanization_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/hint_romanization"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:textColor="@color/word_native"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

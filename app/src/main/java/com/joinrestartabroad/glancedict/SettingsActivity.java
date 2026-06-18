@@ -42,6 +42,7 @@ public class SettingsActivity extends Activity {
     private TextView categoryFontValue;
     private TextView columnsValue;
     private TextView sortByLengthButton;
+    private TextView showRomanizationButton;
     private TextView sourceLanguageValue;
     private TextView targetLanguageValue;
     private View welcomeState;
@@ -150,6 +151,13 @@ public class SettingsActivity extends Activity {
         sortByLengthButton = sortByLengthRow.findViewById(R.id.toggle_button);
         sortByLengthButton.setOnClickListener(v -> toggleSortByLength());
 
+        // Show Romanization Toggle
+        View showRomanizationRow = findViewById(R.id.show_romanization_row);
+        ((TextView) showRomanizationRow.findViewById(R.id.toggle_label)).setText(R.string.settings_show_romanization);
+        ((TextView) showRomanizationRow.findViewById(R.id.toggle_sublabel)).setText(R.string.settings_show_romanization_sub);
+        showRomanizationButton = showRomanizationRow.findViewById(R.id.toggle_button);
+        showRomanizationButton.setOnClickListener(v -> toggleShowRomanization());
+
         fontSizeSp = DictionaryPrefs.getFontSizeSp(this);
         categoryFontSizeSp = DictionaryPrefs.getCategoryFontSizeSp(this);
         columnCount = DictionaryPrefs.getColumnCount(this);
@@ -200,6 +208,7 @@ public class SettingsActivity extends Activity {
         updateCategoryFontValue();
         updateColumnsValue();
         updateSortByLengthButton();
+        updateShowRomanizationButton();
         updateLanguageValues();
         applyTabVisibility();
         refreshDownloadedModels();
@@ -328,6 +337,19 @@ public class SettingsActivity extends Activity {
         boolean on = DictionaryPrefs.isSortByLength(this);
         sortByLengthButton.setText(on ? R.string.toggle_on : R.string.toggle_off);
         sortByLengthButton.setTextColor(getColor(on ? R.color.secondary : R.color.text_hint));
+    }
+
+    private void toggleShowRomanization() {
+        boolean next = !DictionaryPrefs.isShowRomanization(this);
+        DictionaryPrefs.setShowRomanization(this, next);
+        updateShowRomanizationButton();
+        WidgetRefresh.refreshAll(this);
+    }
+
+    private void updateShowRomanizationButton() {
+        boolean on = DictionaryPrefs.isShowRomanization(this);
+        showRomanizationButton.setText(on ? R.string.toggle_on : R.string.toggle_off);
+        showRomanizationButton.setTextColor(getColor(on ? R.color.secondary : R.color.text_hint));
     }
 
     private void updateLanguageValues() {

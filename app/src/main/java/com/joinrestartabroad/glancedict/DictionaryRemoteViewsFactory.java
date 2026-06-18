@@ -22,6 +22,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private int columnCount = DictionaryPrefs.DEFAULT_COLUMN_COUNT;
     private Set<Long> collapsedCategoryIds = new HashSet<>();
     private boolean sortByLength = false;
+    private boolean showRomanization = true;
 
     private static final int[] CELL_IDS = new int[]{
             R.id.word_cell_1,
@@ -40,6 +41,12 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             R.id.word_translation_2,
             R.id.word_translation_3,
             R.id.word_translation_4
+    };
+    private static final int[] ROMANIZATION_IDS = new int[]{
+            R.id.word_romanization_1,
+            R.id.word_romanization_2,
+            R.id.word_romanization_3,
+            R.id.word_romanization_4
     };
 
     public DictionaryRemoteViewsFactory(Context context) {
@@ -100,6 +107,8 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
                 views.setViewVisibility(CELL_IDS[index], View.INVISIBLE);
                 views.setTextViewText(NATIVE_IDS[index], "");
                 views.setTextViewText(TRANSLATION_IDS[index], "");
+                views.setTextViewText(ROMANIZATION_IDS[index], "");
+                views.setViewVisibility(ROMANIZATION_IDS[index], View.GONE);
                 continue;
             }
 
@@ -108,6 +117,16 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
             views.setTextViewText(TRANSLATION_IDS[index], word.secondary);
             views.setTextViewTextSize(NATIVE_IDS[index], TypedValue.COMPLEX_UNIT_SP, fontSizeSp);
             views.setTextViewTextSize(TRANSLATION_IDS[index], TypedValue.COMPLEX_UNIT_SP, Math.max(10, fontSizeSp - 1));
+
+            boolean hasRomanization = showRomanization && word.tertiary != null && !word.tertiary.isEmpty();
+            if (hasRomanization) {
+                views.setTextViewText(ROMANIZATION_IDS[index], word.tertiary);
+                views.setTextViewTextSize(ROMANIZATION_IDS[index], TypedValue.COMPLEX_UNIT_SP, Math.max(9, fontSizeSp - 2));
+                views.setViewVisibility(ROMANIZATION_IDS[index], View.VISIBLE);
+            } else {
+                views.setTextViewText(ROMANIZATION_IDS[index], "");
+                views.setViewVisibility(ROMANIZATION_IDS[index], View.GONE);
+            }
 
             Intent fillInIntent = new Intent();
             fillInIntent.setAction(DictionaryWidgetProvider.ACTION_OPEN_WORD);
@@ -152,6 +171,7 @@ public class DictionaryRemoteViewsFactory implements RemoteViewsService.RemoteVi
         columnCount = DictionaryPrefs.getColumnCount(context);
         collapsedCategoryIds = DictionaryPrefs.getCollapsedCategoryIds(context);
         sortByLength = DictionaryPrefs.isSortByLength(context);
+        showRomanization = DictionaryPrefs.isShowRomanization(context);
         rows = buildRows(db.getWidgetItems(DictionaryPrefs.getActiveCategoryIds(context)));
     }
 

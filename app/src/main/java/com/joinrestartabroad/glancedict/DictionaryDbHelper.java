@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "dictionary.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DEFAULT_CATEGORY = "General";
 
     private static final String TABLE_CATEGORIES = "categories";
@@ -47,6 +47,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 "category_id INTEGER NOT NULL, " +
                 "native_word TEXT NOT NULL, " +
                 "translated_word TEXT NOT NULL, " +
+                "romanization TEXT, " +
                 "date_added INTEGER NOT NULL, " +
                 "FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE)");
         db.execSQL("CREATE INDEX idx_words_category_added ON words(category_id, date_added DESC)");
@@ -72,6 +73,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
             List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(json);
             long now = System.currentTimeMillis();
+            String targetLanguage = DictionaryPrefs.getTargetLanguage(mContext);
 
             for (BulkWordParser.CategoryGroup group : groups) {
                 ContentValues catValues = new ContentValues();
@@ -84,6 +86,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                         wordValues.put("category_id", catId);
                         wordValues.put("native_word", pair.nativeWord);
                         wordValues.put("translated_word", pair.translatedWord);
+                        wordValues.put("romanization", Romanizer.romanize(pair.translatedWord, targetLanguage));
                         wordValues.put("date_added", now);
                         db.insert(TABLE_WORDS, null, wordValues);
                     }
@@ -101,6 +104,38 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 3) {
             migrateDefaultCategoryName(db);
+        }
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE words ADD COLUMN romanization TEXT");
+            backfillRomanization(db);
+        }
+    }
+
+    private void backfillRomanization(SQLiteDatabase db) {
+        String targetLanguage = DictionaryPrefs.getTargetLanguage(mContext);
+        if (!Romanizer.isSupported(targetLanguage)) {
+            return;
+        }
+        try (Cursor cursor = db.query(TABLE_WORDS,
+                new String[]{"id", "translated_word"}, null, null, null, null, null)) {
+            int idIndex = cursor.getColumnIndexOrThrow("id");
+            int translatedIndex = cursor.getColumnIndexOrThrow("translated_word");
+            db.beginTransaction();
+            try {
+                while (cursor.moveToNext()) {
+                    String romanization = Romanizer.romanize(cursor.getString(translatedIndex), targetLanguage);
+                    if (romanization.isEmpty()) {
+                        continue;
+                    }
+                    ContentValues values = new ContentValues();
+                    values.put("romanization", romanization);
+                    db.update(TABLE_WORDS, values, "id = ?",
+                            new String[]{String.valueOf(cursor.getLong(idIndex))});
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
         }
     }
 
@@ -153,7 +188,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public Word getWord(long wordId) {
         try (Cursor cursor = getReadableDatabase().query(
                 TABLE_WORDS,
-                new String[]{"id", "category_id", "native_word", "translated_word"},
+                new String[]{"id", "category_id", "native_word", "translated_word", "romanization"},
                 "id = ?",
                 new String[]{"" + wordId},
                 null,
@@ -166,7 +201,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public long addWord(long categoryId, String nativeWord, String translatedWord) {
+    public long addWord(long categoryId, String nativeWord, String translatedWord, String romanization) {
         String nativeValue = normalize(nativeWord);
         String translatedValue = normalize(translatedWord);
         if (nativeValue.isEmpty() || translatedValue.isEmpty()) {
@@ -177,6 +212,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         values.put("category_id", categoryId);
         values.put("native_word", nativeValue);
         values.put("translated_word", translatedValue);
+        values.put("romanization", normalize(romanization));
         values.put("date_added", System.currentTimeMillis());
         return getWritableDatabase().insert(TABLE_WORDS, null, values);
     }
@@ -187,6 +223,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }
 
         SQLiteDatabase db = getWritableDatabase();
+        String targetLanguage = DictionaryPrefs.getTargetLanguage(mContext);
         int saved = 0;
         db.beginTransaction();
         try {
@@ -201,6 +238,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 values.put("category_id", categoryId);
                 values.put("native_word", nativeValue);
                 values.put("translated_word", translatedValue);
+                values.put("romanization", Romanizer.romanize(translatedValue, targetLanguage));
                 values.put("date_added", System.currentTimeMillis());
                 if (db.insert(TABLE_WORDS, null, values) > 0) {
                     saved++;
@@ -213,11 +251,12 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         return saved;
     }
 
-    public void updateWord(long wordId, long categoryId, String nativeWord, String translatedWord) {
+    public void updateWord(long wordId, long categoryId, String nativeWord, String translatedWord, String romanization) {
         ContentValues values = new ContentValues();
         values.put("category_id", categoryId);
         values.put("native_word", normalize(nativeWord));
         values.put("translated_word", normalize(translatedWord));
+        values.put("romanization", normalize(romanization));
         getWritableDatabase().update(TABLE_WORDS, values, "id = ?", new String[]{"" + wordId});
     }
 
@@ -273,7 +312,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT c.id AS category_id, c.name AS category_name, ")
-                .append("w.id AS word_id, w.native_word, w.translated_word ")
+                .append("w.id AS word_id, w.native_word, w.translated_word, w.romanization ")
                 .append("FROM ").append(TABLE_CATEGORIES).append(" c ")
                 .append("JOIN ").append(TABLE_WORDS).append(" w ON w.category_id = c.id");
         String where = activeFilter("c.id", activeCategoryIds, args);
@@ -292,6 +331,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             int wordIdIndex = cursor.getColumnIndexOrThrow("word_id");
             int nativeIndex = cursor.getColumnIndexOrThrow("native_word");
             int translatedIndex = cursor.getColumnIndexOrThrow("translated_word");
+            int romanizationIndex = cursor.getColumnIndexOrThrow("romanization");
             while (cursor.moveToNext()) {
                 long categoryId = cursor.getLong(categoryIdIndex);
                 if (categoryId != currentCategoryId) {
@@ -302,7 +342,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                         cursor.getLong(wordIdIndex),
                         categoryId,
                         cursor.getString(nativeIndex),
-                        cursor.getString(translatedIndex));
+                        cursor.getString(translatedIndex),
+                        cursor.getString(romanizationIndex));
                 items.add(WidgetItem.word(word));
             }
         }
@@ -313,9 +354,11 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         String longest = "";
         String longestNative = queryLongestWordColumn("native_word", activeCategoryIds);
         String longestTrans = queryLongestWordColumn("translated_word", activeCategoryIds);
+        String longestRoman = queryLongestWordColumn("romanization", activeCategoryIds);
 
         longest = longer(longest, longestNative);
         longest = longer(longest, longestTrans);
+        longest = longer(longest, longestRoman);
         
         // If no words yet, use a reasonable placeholder to prevent 0-width calculation
         if (longest.isEmpty()) {
@@ -348,7 +391,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         long categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("category_id"));
         String nativeWord = cursor.getString(cursor.getColumnIndexOrThrow("native_word"));
         String translatedWord = cursor.getString(cursor.getColumnIndexOrThrow("translated_word"));
-        return new Word(id, categoryId, nativeWord, translatedWord);
+        String romanization = cursor.getString(cursor.getColumnIndexOrThrow("romanization"));
+        return new Word(id, categoryId, nativeWord, translatedWord, romanization);
     }
 
     private String queryLongestWordColumn(String column, Set<Long> activeCategoryIds) {

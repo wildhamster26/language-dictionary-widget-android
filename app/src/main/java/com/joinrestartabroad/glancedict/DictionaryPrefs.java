@@ -25,6 +25,7 @@ public final class DictionaryPrefs {
     private static final String KEY_LONGEST_TEXT_CACHE = "longest_text_cache";
     private static final String KEY_COLLAPSED_CATEGORY_IDS = "collapsed_categories";
     private static final String KEY_SORT_BY_LENGTH = "sort_by_length";
+    private static final String KEY_SHOW_ROMANIZATION = "show_romanization";
     private static final String KEY_SOURCE_LANGUAGE = "source_language";
     private static final String KEY_TARGET_LANGUAGE = "target_language";
 
@@ -115,6 +116,14 @@ public final class DictionaryPrefs {
 
     public static void setSortByLength(Context context, boolean enabled) {
         prefs(context).edit().putBoolean(KEY_SORT_BY_LENGTH, enabled).apply();
+    }
+
+    public static boolean isShowRomanization(Context context) {
+        return prefs(context).getBoolean(KEY_SHOW_ROMANIZATION, true);
+    }
+
+    public static void setShowRomanization(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(KEY_SHOW_ROMANIZATION, enabled).apply();
     }
 
     public static void setLongestTextCache(Context context, String value) {

@@ -38,6 +38,17 @@
             android:singleLine="false"
             android:textColor="@color/word_translation"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/word_romanization_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,6 +84,17 @@
             android:singleLine="false"
             android:textColor="@color/word_translation"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/word_romanization_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -108,6 +130,17 @@
             android:singleLine="false"
             android:textColor="@color/word_translation"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/word_romanization_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -142,5 +175,16 @@
             android:singleLine="false"
             android:textColor="@color/word_translation"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/word_romanization_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

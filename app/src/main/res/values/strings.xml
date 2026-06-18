@@ -18,6 +18,8 @@
     <string name="settings_columns_sub">Grid layout density</string>
     <string name="settings_sort_by_length">Sort Words by Length</string>
     <string name="settings_sort_by_length_sub">Reorders words within each category to reduce wasted row space</string>
+    <string name="settings_show_romanization">Show Pronunciation</string>
+    <string name="settings_show_romanization_sub">Displays pinyin, romaji and other Latin readings beneath words</string>
     <string name="toggle_on">ON</string>
     <string name="toggle_off">OFF</string>
     <string name="font_size_format">%1$dsp</string>
@@ -38,6 +40,7 @@
 
     <string name="hint_native_word">Native word</string>
     <string name="hint_translated_word">Translated word</string>
+    <string name="hint_romanization">Pronunciation (auto-filled)</string>
     <string name="hint_bulk_upload">word, translation\nword, translation</string>
     <string name="hint_new_category_name">New category name…</string>
 
