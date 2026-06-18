@@ -531,7 +531,6 @@ public class SettingsActivity extends Activity {
         for (TranslateRemoteModel model : models) {
             codes.add(model.getLanguage());
         }
-        //noinspection ComparatorCombinators
         Collections.sort(codes, (a, b) -> displayLanguage(a).compareTo(displayLanguage(b)));
 
         if (codes.isEmpty()) {

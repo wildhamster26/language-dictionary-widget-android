@@ -8,7 +8,7 @@ import java.util.Locale;
  * Produces a Latin-script reading (pinyin, Revised Romanization, etc.) for text in a
  * non-Latin script, using the ICU transliterator bundled with Android (API 29+). No added
  * dependency and fully offline, matching the app's translation model.
- *
+ * <p>
  * Quality notes: Chinese ({@code Han-Latin}) gives tone-marked pinyin but picks the most common
  * reading for polyphonic characters; Korean ({@code Hangul-Latin}) is algorithmic and reliable;
  * other non-Latin scripts fall back to {@code Any-Latin}. Japanese is intentionally unsupported

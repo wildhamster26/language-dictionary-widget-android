@@ -24,7 +24,6 @@ public class QuickActionActivity extends Activity {
     private EditText nativeInput;
     private EditText translationInput;
     private EditText romanizationInput;
-    private View romanizationField;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean destroyed;
@@ -61,7 +60,7 @@ public class QuickActionActivity extends Activity {
         nativeInput = findViewById(R.id.native_input);
         translationInput = findViewById(R.id.translation_input);
         romanizationInput = findViewById(R.id.romanization_input);
-        romanizationField = findViewById(R.id.romanization_field);
+        View romanizationField = findViewById(R.id.romanization_field);
 
         bindCategories();
         nativeInput.setText(word.nativeWord);
@@ -72,7 +71,7 @@ public class QuickActionActivity extends Activity {
         romanizationField.setVisibility(romanizationSupported ? View.VISIBLE : View.GONE);
         if (romanizationSupported) {
             String romanization = word.romanization;
-            if (romanization == null || romanization.isEmpty()) {
+            if (romanization.isEmpty()) {
                 romanization = Romanizer.romanize(word.translatedWord, targetLanguage);
             }
             romanizationInput.setText(romanization);
