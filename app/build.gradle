@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation "androidx.core:core:1.19.0"
+    implementation "androidx.core:core:1.16.0"
     implementation "androidx.recyclerview:recyclerview:1.4.0"
     implementation "com.google.mlkit:translate:17.0.3"
 }
