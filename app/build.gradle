@@ -10,7 +10,7 @@ dependencies {
 
 android {
     namespace = "com.joinrestartabroad.glancedict"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.joinrestartabroad.glancedict"
