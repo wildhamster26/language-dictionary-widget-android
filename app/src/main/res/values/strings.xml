@@ -72,12 +72,12 @@
     <string name="settings_translate_to">Translate to</string>
     <string name="settings_translate_to_sub">The language to translate into</string>
     <string name="hint_tap_to_select">Tap to select</string>
-    <string name="dialog_downloading_model">Downloading language model…</string>
+    <string name="dialog_applying_language">Applying language to default words…</string>
     <string name="dialog_download_failed_title">Download failed</string>
     <string name="dialog_download_failed_message">An internet connection is required to download the language model.</string>
     <string name="dialog_language_unsupported_title">Language not supported</string>
-    <string name="dialog_language_unsupported_message">Translation isn\'t available for this language pair. Try selecting a different language under \"My language\".</string>
-    <string name="toast_model_ready">Language model ready</string>
+    <string name="dialog_language_unsupported_message">Translation isn\'t available for this language. The default words were left unchanged; new words you add will still use it.</string>
+    <string name="toast_defaults_updated">Default words updated</string>
     <string name="action_translate">Translate</string>
     <string name="hint_set_target_language">Set a target language in Settings to enable translation</string>
     <string name="toast_translation_failed">Translation failed</string>

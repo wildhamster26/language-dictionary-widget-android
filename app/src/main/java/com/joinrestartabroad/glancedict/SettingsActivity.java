@@ -24,9 +24,6 @@ import androidx.core.content.ContextCompat;
 import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
 import com.google.mlkit.nl.translate.TranslateRemoteModel;
-import com.google.mlkit.nl.translate.Translation;
-import com.google.mlkit.nl.translate.Translator;
-import com.google.mlkit.nl.translate.TranslatorOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,10 +55,7 @@ public class SettingsActivity extends Activity {
     private TextView downloadedEmpty;
     private TextView welcomeMessage;
     private View welcomeCreateWidgetButton;
-    private AlertDialog downloadProgressDialog;
-    private Translator downloadTranslator;
-    private static final long DOWNLOAD_TIMEOUT_MS = 60_000L;
-    private final Runnable downloadTimeoutRunnable = this::onDownloadTimeout;
+    private AlertDialog progressDialog;
     private final RemoteModelManager modelManager = RemoteModelManager.getInstance();
     private boolean onGeneralTab = true;
     private int fontSizeSp;
@@ -245,16 +239,11 @@ public class SettingsActivity extends Activity {
         super.onDestroy();
         destroyed = true;
         executor.shutdownNow();
-        mainHandler.removeCallbacks(downloadTimeoutRunnable);
         if (db != null) {
             db.close();
         }
-        if (downloadTranslator != null) {
-            downloadTranslator.close();
-            downloadTranslator = null;
-        }
-        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
-            downloadProgressDialog.dismiss();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 
@@ -391,112 +380,87 @@ public class SettingsActivity extends Activity {
                 .setTitle(isSource ? R.string.settings_my_language : R.string.settings_translate_to)
                 .setSingleChoiceItems(names, checkedItem, (dialog, which) -> {
                     String selected = languages.get(which).code;
+                    dialog.dismiss();
+                    // Always (re)apply, even when the code matches the current pref: the
+                    // source pref defaults to the device locale, yet the shipped defaults are
+                    // still in English until a translation is actually run.
                     if (isSource) {
                         DictionaryPrefs.setSourceLanguage(this, selected);
                     } else {
                         DictionaryPrefs.setTargetLanguage(this, selected);
                     }
                     updateLanguageValues();
-                    dialog.dismiss();
-                    downloadModelsIfBothSet();
+                    retranslateDefaults(isSource, selected);
                 })
                 .setNegativeButton(R.string.action_cancel, null)
                 .show();
     }
 
-    private void downloadModelsIfBothSet() {
-        String source = DictionaryPrefs.getSourceLanguage(this);
-        String target = DictionaryPrefs.getTargetLanguage(this);
-        if (source == null || target == null) return;
-        if (source.equals(target)) return;
-
-        // Build options before showing any progress so an unsupported language is
-        // reported accurately instead of as a network failure.
-        TranslatorOptions options;
-        try {
-            options = new TranslatorOptions.Builder()
-                    .setSourceLanguage(source)
-                    .setTargetLanguage(target)
-                    .build();
-        } catch (IllegalArgumentException e) {
-            showUnsupportedLanguageDialog();
-            return;
+    /**
+     * Re-translates the shipped default words (and category names, for a native-language
+     * change) into the newly chosen language, then refreshes the widget. The translation
+     * is all-or-nothing; if the language is unsupported or a download fails the existing
+     * default text is kept and the user is notified, while the preference still applies to
+     * newly added words.
+     */
+    private void retranslateDefaults(boolean isSource, String language) {
+        showProgressDialog();
+        DefaultContentTranslator.Callback callback = result -> {
+            if (destroyed) return;
+            dismissProgressDialog();
+            switch (result) {
+                case SUCCESS:
+                    onDefaultsRetranslated();
+                    break;
+                case UNSUPPORTED:
+                    showUnsupportedLanguageDialog();
+                    break;
+                case FAILED:
+                default:
+                    showDownloadFailedDialog();
+                    break;
+            }
+        };
+        if (isSource) {
+            DefaultContentTranslator.applyNativeLanguage(
+                    this, db, language, executor, mainHandler, callback);
+        } else {
+            DefaultContentTranslator.applyTargetLanguage(
+                    this, db, language, executor, mainHandler, callback);
         }
+    }
 
-        final Translator translator;
-        try {
-            translator = Translation.getClient(options);
-        } catch (RuntimeException e) {
-            showDownloadFailedDialog();
-            return;
-        }
-        downloadTranslator = translator;
+    private void onDefaultsRetranslated() {
+        executor.execute(() -> {
+            db.refreshLongestTextCache(getApplicationContext());
+            mainHandler.post(() -> {
+                if (destroyed) return;
+                WidgetRefresh.refreshAll(this);
+                refreshDownloadedModels();
+                Toast.makeText(this, R.string.toast_defaults_updated, Toast.LENGTH_SHORT).show();
+            });
+        });
+    }
 
-        downloadProgressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                .setMessage(R.string.dialog_downloading_model)
-                .setCancelable(true)
-                .setOnCancelListener(d -> {
-                    mainHandler.removeCallbacks(downloadTimeoutRunnable);
-                    closeDownloadTranslator(translator);
-                })
+    private void showProgressDialog() {
+        if (destroyed) return;
+        progressDialog = new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setMessage(R.string.dialog_applying_language)
+                .setCancelable(false)
                 .create();
-        downloadProgressDialog.show();
-        mainHandler.postDelayed(downloadTimeoutRunnable, DOWNLOAD_TIMEOUT_MS);
-
-        try {
-            translator.downloadModelIfNeeded()
-                    .addOnSuccessListener(unused -> {
-                        if (downloadTranslator != translator) {
-                            translator.close();
-                            return;
-                        }
-                        mainHandler.removeCallbacks(downloadTimeoutRunnable);
-                        closeDownloadTranslator(translator);
-                        if (!destroyed) {
-                            if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
-                                downloadProgressDialog.dismiss();
-                            }
-                            Toast.makeText(this, R.string.toast_model_ready, Toast.LENGTH_SHORT).show();
-                            refreshDownloadedModels();
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        if (downloadTranslator != translator) {
-                            translator.close();
-                            return;
-                        }
-                        mainHandler.removeCallbacks(downloadTimeoutRunnable);
-                        closeDownloadTranslator(translator);
-                        showDownloadFailedDialog();
-                    });
-        } catch (RuntimeException e) {
-            mainHandler.removeCallbacks(downloadTimeoutRunnable);
-            closeDownloadTranslator(translator);
-            showDownloadFailedDialog();
-        }
+        progressDialog.show();
     }
 
-    private void onDownloadTimeout() {
-        Translator translator = downloadTranslator;
-        downloadTranslator = null;
-        if (translator != null) {
-            translator.close();
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
-        showDownloadFailedDialog();
-    }
-
-    private void closeDownloadTranslator(Translator translator) {
-        translator.close();
-        if (downloadTranslator == translator) {
-            downloadTranslator = null;
-        }
+        progressDialog = null;
     }
 
     private void showDownloadFailedDialog() {
         if (destroyed) return;
-        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
-            downloadProgressDialog.dismiss();
-        }
+        dismissProgressDialog();
         new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
                 .setTitle(R.string.dialog_download_failed_title)
                 .setMessage(R.string.dialog_download_failed_message)

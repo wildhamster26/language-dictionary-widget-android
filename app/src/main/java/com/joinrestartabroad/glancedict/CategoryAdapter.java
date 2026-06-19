@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -100,7 +99,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
             // Delete logic (hide for the default category)
-            if (Objects.equals(category.name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
+            if (category.isDefault) {
                 h.deleteButton.setVisibility(View.GONE);
                 h.reorderHandle.setVisibility(View.INVISIBLE);
             } else {
@@ -121,8 +120,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (fromPosition == 0 || toPosition == 0) return;
         
         // Prevent moving the default category, usually first item at pos 1.
-        if (Objects.equals(categories.get(fromPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY) ||
-            Objects.equals(categories.get(toPosition - 1).name, DictionaryDbHelper.DEFAULT_CATEGORY)) {
+        if (categories.get(fromPosition - 1).isDefault || categories.get(toPosition - 1).isDefault) {
             return;
         }
 

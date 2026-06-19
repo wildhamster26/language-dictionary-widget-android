@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "dictionary.db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DEFAULT_CATEGORY = "General";
 
     private static final String TABLE_CATEGORIES = "categories";
@@ -41,59 +41,51 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE categories (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL UNIQUE, " +
-                "display_order INTEGER DEFAULT 0)");
+                "display_order INTEGER DEFAULT 0, " +
+                "default_name_en TEXT)");
         db.execSQL("CREATE TABLE words (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "category_id INTEGER NOT NULL, " +
                 "native_word TEXT NOT NULL, " +
                 "translated_word TEXT NOT NULL, " +
                 "romanization TEXT, " +
+                "default_native_en TEXT, " +
+                "is_edited INTEGER DEFAULT 0, " +
                 "date_added INTEGER NOT NULL, " +
                 "FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE)");
         db.execSQL("CREATE INDEX idx_words_category_added ON words(category_id, date_added DESC)");
 
         ContentValues values = new ContentValues();
         values.put("name", DEFAULT_CATEGORY);
+        values.put("default_name_en", DEFAULT_CATEGORY);
         db.insert(TABLE_CATEGORIES, null, values);
 
         loadInitialData(db);
     }
 
     private void loadInitialData(SQLiteDatabase db) {
-        try (Reader reader = new InputStreamReader(
-                mContext.getAssets().open("initial_data.json"),
-                StandardCharsets.UTF_8)) {
-            StringBuilder result = new StringBuilder();
-            char[] buffer = new char[1024];
-            int length;
-            while ((length = reader.read(buffer)) != -1) {
-                result.append(buffer, 0, length);
-            }
-            String json = result.toString();
+        List<BulkWordParser.CategoryGroup> groups = readInitialData();
+        long now = System.currentTimeMillis();
+        String targetLanguage = DictionaryPrefs.getTargetLanguage(mContext);
 
-            List<BulkWordParser.CategoryGroup> groups = BulkWordParser.parseJson(json);
-            long now = System.currentTimeMillis();
-            String targetLanguage = DictionaryPrefs.getTargetLanguage(mContext);
+        for (BulkWordParser.CategoryGroup group : groups) {
+            ContentValues catValues = new ContentValues();
+            catValues.put("name", group.name);
+            catValues.put("default_name_en", group.name);
+            long catId = db.insert(TABLE_CATEGORIES, null, catValues);
 
-            for (BulkWordParser.CategoryGroup group : groups) {
-                ContentValues catValues = new ContentValues();
-                catValues.put("name", group.name);
-                long catId = db.insert(TABLE_CATEGORIES, null, catValues);
-
-                if (catId != -1) {
-                    for (BulkWordParser.Pair pair : group.pairs) {
-                        ContentValues wordValues = new ContentValues();
-                        wordValues.put("category_id", catId);
-                        wordValues.put("native_word", pair.nativeWord);
-                        wordValues.put("translated_word", pair.translatedWord);
-                        wordValues.put("romanization", Romanizer.romanize(pair.translatedWord, targetLanguage));
-                        wordValues.put("date_added", now);
-                        db.insert(TABLE_WORDS, null, wordValues);
-                    }
+            if (catId != -1) {
+                for (BulkWordParser.Pair pair : group.pairs) {
+                    ContentValues wordValues = new ContentValues();
+                    wordValues.put("category_id", catId);
+                    wordValues.put("native_word", pair.nativeWord);
+                    wordValues.put("translated_word", pair.translatedWord);
+                    wordValues.put("romanization", Romanizer.romanize(pair.translatedWord, targetLanguage));
+                    wordValues.put("default_native_en", pair.nativeWord);
+                    wordValues.put("date_added", now);
+                    db.insert(TABLE_WORDS, null, wordValues);
                 }
             }
-        } catch (IOException e) {
-            android.util.Log.e("DictionaryDbHelper", "Failed to load initial data", e);
         }
     }
 
@@ -108,6 +100,72 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             db.execSQL("ALTER TABLE words ADD COLUMN romanization TEXT");
             backfillRomanization(db);
+        }
+        if (oldVersion < 5) {
+            db.execSQL("ALTER TABLE words ADD COLUMN default_native_en TEXT");
+            db.execSQL("ALTER TABLE words ADD COLUMN is_edited INTEGER DEFAULT 0");
+            db.execSQL("ALTER TABLE categories ADD COLUMN default_name_en TEXT");
+            backfillDefaultMarkers(db);
+        }
+    }
+
+    /**
+     * Identifies which existing rows came from the shipped defaults so they can be
+     * re-translated on a language change. Defaults are matched against
+     * {@code initial_data.json} by category name + English native word; user-added
+     * content stays untracked ({@code default_*_en} left null).
+     */
+    private void backfillDefaultMarkers(SQLiteDatabase db) {
+        List<BulkWordParser.CategoryGroup> groups = readInitialData();
+        if (groups.isEmpty()) {
+            return;
+        }
+        db.beginTransaction();
+        try {
+            // The default category created outside the JSON.
+            ContentValues generalValues = new ContentValues();
+            generalValues.put("default_name_en", DEFAULT_CATEGORY);
+            db.update(TABLE_CATEGORIES, generalValues, "name = ? COLLATE NOCASE",
+                    new String[]{DEFAULT_CATEGORY});
+
+            for (BulkWordParser.CategoryGroup group : groups) {
+                Long catId = findCategoryId(db, group.name);
+                if (catId == null) {
+                    continue;
+                }
+                ContentValues catValues = new ContentValues();
+                catValues.put("default_name_en", group.name);
+                db.update(TABLE_CATEGORIES, catValues, "id = ?",
+                        new String[]{String.valueOf(catId)});
+
+                for (BulkWordParser.Pair pair : group.pairs) {
+                    ContentValues wordValues = new ContentValues();
+                    wordValues.put("default_native_en", pair.nativeWord);
+                    db.update(TABLE_WORDS, wordValues,
+                            "category_id = ? AND native_word = ? COLLATE NOCASE AND default_native_en IS NULL",
+                            new String[]{String.valueOf(catId), pair.nativeWord});
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    private List<BulkWordParser.CategoryGroup> readInitialData() {
+        try (Reader reader = new InputStreamReader(
+                mContext.getAssets().open("initial_data.json"),
+                StandardCharsets.UTF_8)) {
+            StringBuilder result = new StringBuilder();
+            char[] buffer = new char[1024];
+            int length;
+            while ((length = reader.read(buffer)) != -1) {
+                result.append(buffer, 0, length);
+            }
+            return BulkWordParser.parseJson(result.toString());
+        } catch (IOException e) {
+            android.util.Log.e("DictionaryDbHelper", "Failed to read initial data", e);
+            return new ArrayList<>();
         }
     }
 
@@ -140,11 +198,29 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     }
 
     public long ensureDefaultCategory() {
-        Long existing = findCategoryId(DEFAULT_CATEGORY);
+        // Match on the canonical English identity, not the display name: the default
+        // category's name may have been translated into the user's native language.
+        Long existing = findDefaultCategoryId();
         if (existing != null) {
             return existing;
         }
-        return createCategory(DEFAULT_CATEGORY);
+        ContentValues values = new ContentValues();
+        values.put("name", DEFAULT_CATEGORY);
+        values.put("default_name_en", DEFAULT_CATEGORY);
+        return getWritableDatabase().insert(TABLE_CATEGORIES, null, values);
+    }
+
+    private Long findDefaultCategoryId() {
+        try (Cursor cursor = getReadableDatabase().query(
+                TABLE_CATEGORIES,
+                new String[]{"id"},
+                "default_name_en = ?",
+                new String[]{DEFAULT_CATEGORY},
+                null,
+                null,
+                null)) {
+            return cursor.moveToFirst() ? cursor.getLong(0) : null;
+        }
     }
 
     public long createCategory(String name) {
@@ -166,20 +242,22 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public List<Category> getCategories() {
         ensureDefaultCategory();
         List<Category> categories = new ArrayList<>();
-        String query = "SELECT id, name, " +
+        String query = "SELECT id, name, default_name_en, " +
                 "(SELECT COUNT(*) FROM words WHERE words.category_id = categories.id) as word_count " +
                 "FROM categories " +
-                "ORDER BY CASE WHEN name = ? THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
+                "ORDER BY CASE WHEN default_name_en = ? THEN 0 ELSE 1 END, display_order ASC, name COLLATE NOCASE ASC";
 
         try (Cursor cursor = getReadableDatabase().rawQuery(query, new String[]{DEFAULT_CATEGORY})) {
             int idIndex = cursor.getColumnIndexOrThrow("id");
             int nameIndex = cursor.getColumnIndexOrThrow("name");
+            int defaultNameIndex = cursor.getColumnIndexOrThrow("default_name_en");
             int countIndex = cursor.getColumnIndexOrThrow("word_count");
             while (cursor.moveToNext()) {
                 categories.add(new Category(
                         cursor.getLong(idIndex),
                         cursor.getString(nameIndex),
-                        cursor.getInt(countIndex)));
+                        cursor.getInt(countIndex),
+                        DEFAULT_CATEGORY.equals(cursor.getString(defaultNameIndex))));
             }
         }
         return categories;
@@ -257,7 +335,101 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         values.put("native_word", normalize(nativeWord));
         values.put("translated_word", normalize(translatedWord));
         values.put("romanization", normalize(romanization));
+        // A user-edited default word is no longer auto-translated on language changes.
+        values.put("is_edited", 1);
         getWritableDatabase().update(TABLE_WORDS, values, "id = ?", new String[]{"" + wordId});
+    }
+
+    /** A shipped default word still eligible for automatic re-translation. */
+    public static final class DefaultWord {
+        public final long id;
+        public final String englishNative;
+
+        DefaultWord(long id, String englishNative) {
+            this.id = id;
+            this.englishNative = englishNative;
+        }
+    }
+
+    /** A shipped default category still eligible for automatic re-translation. */
+    public static final class DefaultCategory {
+        public final long id;
+        public final String englishName;
+
+        DefaultCategory(long id, String englishName) {
+            this.id = id;
+            this.englishName = englishName;
+        }
+    }
+
+    /** Default words the user has not edited; the source for native/target re-translation. */
+    public List<DefaultWord> getRetranslatableDefaultWords() {
+        List<DefaultWord> words = new ArrayList<>();
+        try (Cursor cursor = getReadableDatabase().query(
+                TABLE_WORDS,
+                new String[]{"id", "default_native_en"},
+                "default_native_en IS NOT NULL AND is_edited = 0",
+                null, null, null, null)) {
+            while (cursor.moveToNext()) {
+                words.add(new DefaultWord(cursor.getLong(0), cursor.getString(1)));
+            }
+        }
+        return words;
+    }
+
+    /** All default categories (their display names are re-translated on native-language change). */
+    public List<DefaultCategory> getDefaultCategories() {
+        List<DefaultCategory> categories = new ArrayList<>();
+        try (Cursor cursor = getReadableDatabase().query(
+                TABLE_CATEGORIES,
+                new String[]{"id", "default_name_en"},
+                "default_name_en IS NOT NULL",
+                null, null, null, null)) {
+            while (cursor.moveToNext()) {
+                categories.add(new DefaultCategory(cursor.getLong(0), cursor.getString(1)));
+            }
+        }
+        return categories;
+    }
+
+    /** Applies re-translated native words and category names in a single transaction. */
+    public void commitNativeTranslations(java.util.Map<Long, String> wordNative,
+                                         java.util.Map<Long, String> categoryNames) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (java.util.Map.Entry<Long, String> entry : wordNative.entrySet()) {
+                ContentValues values = new ContentValues();
+                values.put("native_word", entry.getValue());
+                db.update(TABLE_WORDS, values, "id = ?", new String[]{String.valueOf(entry.getKey())});
+            }
+            for (java.util.Map.Entry<Long, String> entry : categoryNames.entrySet()) {
+                ContentValues values = new ContentValues();
+                values.put("name", entry.getValue());
+                db.update(TABLE_CATEGORIES, values, "id = ?", new String[]{String.valueOf(entry.getKey())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /** Applies re-translated target words and their romanization in a single transaction. */
+    public void commitTargetTranslations(java.util.Map<Long, String> translated,
+                                         java.util.Map<Long, String> romanization) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (java.util.Map.Entry<Long, String> entry : translated.entrySet()) {
+                ContentValues values = new ContentValues();
+                values.put("translated_word", entry.getValue());
+                values.put("romanization", romanization.get(entry.getKey()));
+                db.update(TABLE_WORDS, values, "id = ?", new String[]{String.valueOf(entry.getKey())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void deleteWord(long wordId) {
@@ -320,7 +492,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             sql.append(" WHERE ").append(where);
         }
         args.add(DEFAULT_CATEGORY);
-        sql.append(" ORDER BY CASE WHEN c.name = ? THEN 0 ELSE 1 END, ")
+        sql.append(" ORDER BY CASE WHEN c.default_name_en = ? THEN 0 ELSE 1 END, ")
                 .append("c.display_order ASC, c.name COLLATE NOCASE ASC, ")
                 .append("w.date_added DESC, w.id DESC");
 
