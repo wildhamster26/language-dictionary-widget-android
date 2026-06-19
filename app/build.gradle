@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.joinrestartabroad.glancedict"
         minSdk = 23
-        //noinspection EditedTargetSdkVersion
+        //noinspection EditedTargetSdkVersion,OldTargetApi
         targetSdk = 36
         versionCode = 13
         versionName = '2.4'

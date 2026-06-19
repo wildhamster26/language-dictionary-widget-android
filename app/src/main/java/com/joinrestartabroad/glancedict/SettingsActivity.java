@@ -423,10 +423,10 @@ public class SettingsActivity extends Activity {
         };
         if (isSource) {
             DefaultContentTranslator.applyNativeLanguage(
-                    this, db, language, executor, mainHandler, callback);
+                    db, language, executor, mainHandler, callback);
         } else {
             DefaultContentTranslator.applyTargetLanguage(
-                    this, db, language, executor, mainHandler, callback);
+                    db, language, executor, mainHandler, callback);
         }
     }
 

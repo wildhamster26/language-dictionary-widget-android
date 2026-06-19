@@ -1,6 +1,5 @@
 package com.joinrestartabroad.glancedict;
 
-import android.content.Context;
 import android.os.Handler;
 
 import com.google.android.gms.tasks.Tasks;
@@ -43,9 +42,8 @@ public final class DefaultContentTranslator {
      * Re-translates the native side of default words and the default category names into
      * {@code nativeLang}. The translated side and romanization are left unchanged.
      */
-    public static void applyNativeLanguage(Context context, DictionaryDbHelper db, String nativeLang,
+    public static void applyNativeLanguage(DictionaryDbHelper db, String nativeLang,
                                            ExecutorService executor, Handler mainHandler, Callback callback) {
-        Context appContext = context.getApplicationContext();
         executor.execute(() -> {
             List<DictionaryDbHelper.DefaultWord> words = db.getRetranslatableDefaultWords();
             List<DictionaryDbHelper.DefaultCategory> categories = db.getDefaultCategories();
@@ -66,12 +64,11 @@ public final class DefaultContentTranslator {
                 return;
             }
 
-            Translator translator = createTranslator(nativeLang);
-            if (translator == null) {
-                post(mainHandler, callback, Result.UNSUPPORTED);
-                return;
-            }
-            try {
+            try (Translator translator = createTranslator(nativeLang)) {
+                if (translator == null) {
+                    post(mainHandler, callback, Result.UNSUPPORTED);
+                    return;
+                }
                 Tasks.await(translator.downloadModelIfNeeded(), TIMEOUT_MS, TimeUnit.MILLISECONDS);
                 for (DictionaryDbHelper.DefaultWord word : words) {
                     wordNative.put(word.id, translate(translator, word.englishNative));
@@ -82,8 +79,6 @@ public final class DefaultContentTranslator {
             } catch (Exception e) {
                 post(mainHandler, callback, Result.FAILED);
                 return;
-            } finally {
-                translator.close();
             }
 
             db.commitNativeTranslations(wordNative, categoryNames);
@@ -95,7 +90,7 @@ public final class DefaultContentTranslator {
      * Re-translates the translated side (and recomputes romanization) of default words into
      * {@code targetLang}. The native side and category names are left unchanged.
      */
-    public static void applyTargetLanguage(Context context, DictionaryDbHelper db, String targetLang,
+    public static void applyTargetLanguage(DictionaryDbHelper db, String targetLang,
                                            ExecutorService executor, Handler mainHandler, Callback callback) {
         executor.execute(() -> {
             List<DictionaryDbHelper.DefaultWord> words = db.getRetranslatableDefaultWords();
@@ -103,12 +98,11 @@ public final class DefaultContentTranslator {
             Map<Long, String> translated = new HashMap<>();
             Map<Long, String> romanization = new HashMap<>();
 
-            Translator translator = createTranslator(targetLang);
-            if (translator == null) {
-                post(mainHandler, callback, Result.UNSUPPORTED);
-                return;
-            }
-            try {
+            try (Translator translator = createTranslator(targetLang)) {
+                if (translator == null) {
+                    post(mainHandler, callback, Result.UNSUPPORTED);
+                    return;
+                }
                 Tasks.await(translator.downloadModelIfNeeded(), TIMEOUT_MS, TimeUnit.MILLISECONDS);
                 for (DictionaryDbHelper.DefaultWord word : words) {
                     String value = translate(translator, word.englishNative);
@@ -118,8 +112,6 @@ public final class DefaultContentTranslator {
             } catch (Exception e) {
                 post(mainHandler, callback, Result.FAILED);
                 return;
-            } finally {
-                translator.close();
             }
 
             db.commitTargetTranslations(translated, romanization);
